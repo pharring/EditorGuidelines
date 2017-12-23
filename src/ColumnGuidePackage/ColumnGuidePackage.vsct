@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--  This is the file that defines the actual layout and type of the commands.
+        It is divided in different sections (e.g. command definition, command
+        placement, ...), with each defining a specific set of properties.
+        See the comment before each section for more details about how to
+        use it. -->
+
+  <!--  The VSCT compiler (the tool that translates this file into the binary 
+        format that VisualStudio will consume) has the ability to run a preprocessor 
+        on the vsct file; this preprocessor is (usually) the C++ preprocessor, so 
+        it is possible to define includes and macros with the same syntax used 
+        in C++ files. Using this ability of the compiler here, we include some files 
+        defining some of the constants that we will use inside the file. -->
+
+  <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
+  <Extern href="stdidcmd.h" />
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h" />
+
+  <!--Definition of some VSCT specific constants. In this sample we use it for the IDs inside the guidOfficeIcon group. -->
+  <!--<Extern href="msobtnid.h" xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" />-->
+
+
+
+
+  <!--The Commands section is where we the commands, menus and menu groups are defined.
+      This section uses a Guid to identify the package that provides the command defined inside it. -->
+  <Commands package="guidColumnGuidePkg">
+    <!-- Inside this section we have different sub-sections: one for the menus, another  
+    for the menu groups, one for the buttons (the actual commands), one for the combos 
+    and the last one for the bitmaps used. Each element is identified by a command id that  
+    is a unique pair of guid and numeric identifier; the guid part of the identifier is usually  
+    called "command set" and is used to group different command inside a logically related  
+    group; your package should define its own command set in order to avoid collisions  
+    with command ids defined by other packages. -->
+
+
+    <!-- In this section you can define new menu groups. A menu group is a container for 
+         other menus or buttons (commands); from a visual point of view you can see the 
+         group as the part of a menu contained between two lines. The parent of a group 
+         must be a menu. -->
+    <Groups>
+
+      <!-- The main group is parented to the edit menu. All the buttons within the group
+           have the "CommandWellOnly" flag, so they're actually invisible, but it means
+           they get canonical names that begin with "Edit". Using placements, the group
+           is also placed in the GuidelinesSubMenu group. -->
+      <!-- The priority 0xB801 is chosen so it goes just after IDG_VS_EDIT_COMMANDWELL -->
+      <Group guid="guidColumnGuideCmdSet" id="GuidelineMenuItemsGroup" priority="0xB801">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_EDIT" />
+      </Group>
+
+      <!-- Group for holding the "Guidelines" sub-menu anchor. The group is parented to
+           the context menu for code windows. That takes care of most editors, but it's
+           also placed in a couple of other windows using Placements -->
+      <Group guid="guidColumnGuideCmdSet" id="GuidelineContextMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
+      </Group>
+
+    </Groups>
+
+    <Menus>
+      <Menu guid="guidColumnGuideCmdSet" id="GuidelinesSubMenu" priority="0x1000" type="Menu">
+        <Parent guid="guidColumnGuideCmdSet" id="GuidelineContextMenuGroup" />
+        <Strings>
+          <ButtonText>&amp;Guidelines</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <!--Buttons section. -->
+    <!--This section defines the elements the user can interact with, like a menu command or a button 
+        or combo box in a toolbar. -->
+    <Buttons>
+      <!--To define a menu group you have to specify its ID, the parent menu and its display priority. 
+          The command is visible and enabled by default. If you need to change the visibility, status, etc, you can use
+          the CommandFlag node.
+          You can add more than one CommandFlag node e.g.:
+              <CommandFlag>DefaultInvisible</CommandFlag>
+              <CommandFlag>DynamicVisibility</CommandFlag>
+          If you do not want an image next to your command, remove the Icon node or set it to <Icon guid="guidOfficeIcon" id="msotcidNoIcon" /> -->
+
+      <Button guid="guidColumnGuideCmdSet" id="cmdidAddColumnGuideline" priority="0x0100" type="Button">
+        <Parent guid="guidColumnGuideCmdSet" id="GuidelineMenuItemsGroup" />
+        <Icon guid="guidImages" id="bmpPicAddGuide" />
+        <CommandFlag>CommandWellOnly</CommandFlag>
+        <CommandFlag>AllowParams</CommandFlag>
+        <Strings>
+          <ButtonText>&amp;Add Guideline</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidColumnGuideCmdSet" id="cmdidRemoveColumnGuideline" priority="0x0101" type="Button">
+        <Parent guid="guidColumnGuideCmdSet" id="GuidelineMenuItemsGroup" />
+        <Icon guid="guidImages" id="bmpPicRemoveGuide" />
+        <CommandFlag>CommandWellOnly</CommandFlag>
+        <CommandFlag>AllowParams</CommandFlag>
+        <Strings>
+          <ButtonText>&amp;Remove Guideline</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidColumnGuideCmdSet" id="cmdidRemoveAllColumnGuidelines" priority="0x0102" type="Button">
+        <Parent guid="guidColumnGuideCmdSet" id="GuidelineMenuItemsGroup" />
+        <CommandFlag>CommandWellOnly</CommandFlag>
+        <Strings>
+          <ButtonText>Remove A&amp;ll Guidelines</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
+    <Bitmaps>
+      <!--  The bitmap id is defined in a way that is a little bit different from the others: 
+            the declaration starts with a guid for the bitmap strip, then there is the resource id of the 
+            bitmap strip containing the bitmaps and then there are the numeric ids of the elements used 
+            inside a button definition. An important aspect of this declaration is that the element id 
+            must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
+      <Bitmap guid="guidImages" href="Resources\Images_32bit.png" usedList="bmpPicAddGuide, bmpPicRemoveGuide" />
+
+    </Bitmaps>
+
+  </Commands>
+
+  <CommandPlacements>
+
+    <!-- Define secondary placements for our groups -->
+
+    <!-- Place the group containing the three commands in the sub-menu -->
+    <CommandPlacement guid="guidColumnGuideCmdSet" id="GuidelineMenuItemsGroup" priority="0x0100">
+      <Parent guid="guidColumnGuideCmdSet" id="GuidelinesSubMenu" />
+    </CommandPlacement>
+
+    <!-- The HTML editor context menu, for some reason, redefines its own groups
+         so we need to place a copy of our context menu there too. -->
+    <CommandPlacement guid="guidColumnGuideCmdSet" id="GuidelineContextMenuGroup" priority="0x1001">
+      <Parent guid="CMDSETID_HtmEdGrp" id="IDMX_HTM_SOURCE_HTML" />
+    </CommandPlacement>
+    
+    <!-- The HTML context menu in Dev12 changed. -->
+    <CommandPlacement guid="guidColumnGuideCmdSet" id="GuidelineContextMenuGroup" priority="0x1001">
+      <Parent guid="CMDSETID_HtmEdGrp_Dev12" id="IDMX_HTM_SOURCE_HTML_Dev12" />
+    </CommandPlacement>
+
+    <!-- Similarly for Script -->
+    <CommandPlacement guid="guidColumnGuideCmdSet" id="GuidelineContextMenuGroup" priority="0x1001">
+      <Parent guid="CMDSETID_HtmEdGrp" id="IDMX_HTM_SOURCE_SCRIPT" />
+    </CommandPlacement>
+
+    <!-- Similarly for ASPX  -->
+    <CommandPlacement guid="guidColumnGuideCmdSet" id="GuidelineContextMenuGroup" priority="0x1001">
+      <Parent guid="CMDSETID_HtmEdGrp" id="IDMX_HTM_SOURCE_ASPX" />
+    </CommandPlacement>
+
+    <!-- Similarly for the XAML editor context menu -->
+    <CommandPlacement guid="guidColumnGuideCmdSet" id="GuidelineContextMenuGroup" priority="0x0600">
+      <Parent guid="guidXamlUiCmds" id="IDM_XAML_EDITOR" />
+    </CommandPlacement>
+
+  </CommandPlacements>
+
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidColumnGuidePkg" value="{a0b80b01-be16-4c42-ab44-7f8d057faa2f}" />
+
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidColumnGuideCmdSet" value="{5aa4cf31-6030-4655-99e7-239b331103f3}">
+      <IDSymbol name="GuidelineContextMenuGroup" value="0x1020" />
+      <IDSymbol name="GuidelineMenuItemsGroup" value="0x1021" />
+      <IDSymbol name="GuidelinesSubMenu" value="0x1022" />
+      <IDSymbol name="cmdidAddColumnGuideline" value="0x0100" />
+      <IDSymbol name="cmdidRemoveColumnGuideline" value="0x0101" />
+      <IDSymbol name="cmdidRemoveAllColumnGuidelines" value="0x0103" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImages" value="{0a26cd1d-2a4b-487b-b6e3-170d05128ae8}">
+      <IDSymbol name="bmpPicAddGuide" value="1" />
+      <IDSymbol name="bmpPicRemoveGuide" value="2" />
+    </GuidSymbol>
+
+    <GuidSymbol name="CMDSETID_HtmEdGrp_Dev12" value="{78F03954-2FB8-4087-8CE7-59D71710B3BB}">
+      <IDSymbol name="IDMX_HTM_SOURCE_HTML_Dev12" value="0x1" />
+    </GuidSymbol>
+    
+    <GuidSymbol name="CMDSETID_HtmEdGrp" value="{d7e8c5e1-bdb8-11d0-9c88-0000f8040a53}">
+      <IDSymbol name="IDMX_HTM_SOURCE_HTML" value="0x33" />
+      <IDSymbol name="IDMX_HTM_SOURCE_SCRIPT" value="0x34" />
+      <IDSymbol name="IDMX_HTM_SOURCE_ASPX" value="0x35" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidXamlUiCmds" value="{4c87b692-1202-46aa-b64c-ef01faec53da}">
+      <IDSymbol name="IDM_XAML_EDITOR" value="0x103" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

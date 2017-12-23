@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="Editor_Guidelines.Microsoft Corp..123716ef-b2ed-4fab-bbcf-1d5f84856ca3" Version="2.0.0" Language="en-US" Publisher="Paul Harrington" />
+        <DisplayName>Editor Guidelines</DisplayName>
+        <Description xml:space="preserve">Adds vertical column guides to the Visual Studio text editor.</Description>
+        <MoreInfo>https://github.com/pharring/EditorGuidelines/blob/master/README.md</MoreInfo>
+        <License>LICENSE</License>
+        <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
+        <PreviewImage>ColumnGuidelines.png</PreviewImage>
+        <Tags>Editor;Editing;Guidelines;Column</Tags>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.IntegratedShell" Version="[11.0,15.0)" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0]" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+        <Dependency d:Source="Installed" Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" Version="[11.0,12.0)" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ColumnGuidePackage" Path="|ColumnGuidePackage;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ColumnGuide" Path="|ColumnGuide|" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+</PackageManifest>
