@@ -7,6 +7,7 @@ The extension adds vertical column guides behind your code. This is useful if yo
 [Download](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines) and run the extension (VSIX) for Visual Studio 2012 or later from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines) or, from within Visual Studio, search for "Editor Guidelines" in the "Extensions and Updates" UI.
 
 Control guidelines via the context (right-click) menu on the editor surface. You will see a *Guidelines* flyout with three commands:
+
 ![GuidelinesContextMenu](images/ContextMenu.png)
 
 * When *Add Guideline* is selected, a vertical dashed line will be drawn at the same position as the caret (insertion point).
@@ -14,6 +15,7 @@ Control guidelines via the context (right-click) menu on the editor surface. You
 * *Remove All Guidelines* does exactly that.
 
 You can change the guideline color from the Fonts and Colors page in `Tools|Options`. Look for *Guideline* in the Text Editor category:
+
 ![GuidelinesToolsOptions](images/FontsAndColors.png)
 
 These commands may also be accessed from Visual Studio's Command Window.
