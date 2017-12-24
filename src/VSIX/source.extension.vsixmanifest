@@ -4,8 +4,9 @@
         <Identity Id="Editor_Guidelines.Microsoft Corp..123716ef-b2ed-4fab-bbcf-1d5f84856ca3" Version="2.0.0" Language="en-US" Publisher="Paul Harrington" />
         <DisplayName>Editor Guidelines</DisplayName>
         <Description xml:space="preserve">Adds vertical column guides to the Visual Studio text editor.</Description>
-        <MoreInfo>https://github.com/pharring/EditorGuidelines/blob/master/README.md</MoreInfo>
+        <MoreInfo>https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines</MoreInfo>
         <License>LICENSE</License>
+        <GettingStartedGuide>https://github.com/pharring/EditorGuidelines#getting-started</GettingStartedGuide>
         <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
         <Icon>EditorGuidelines_90px.png</Icon>
         <Tags>Editor;Editing;Guidelines;Column</Tags>
