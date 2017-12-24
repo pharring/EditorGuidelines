@@ -7,7 +7,7 @@
         <MoreInfo>https://github.com/pharring/EditorGuidelines/blob/master/README.md</MoreInfo>
         <License>LICENSE</License>
         <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
-        <PreviewImage>ColumnGuidelines.png</PreviewImage>
+        <Icon>EditorGuidelines_90px.png</Icon>
         <Tags>Editor;Editing;Guidelines;Column</Tags>
     </Metadata>
     <Installation>
