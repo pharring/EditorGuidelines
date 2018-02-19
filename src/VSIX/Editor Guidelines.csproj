@@ -46,6 +46,11 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="..\..\images\EditorGuidelines_128px.png">
+      <Link>EditorGuidelines_128px.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="..\..\LICENSE">
       <Link>LICENSE</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -59,11 +64,6 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\images\EditorGuidelines_90px.png">
-      <Link>EditorGuidelines_90px.png</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="ReleaseNotes.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
