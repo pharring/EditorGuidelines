@@ -1,5 +1,5 @@
-﻿// Guids.cs
-// MUST match guids.h
+﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
+
 using System;
 
 namespace Microsoft.ColumnGuidePackage

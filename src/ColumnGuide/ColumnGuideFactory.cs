@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.Composition;
+﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
+
+using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using Microsoft.VisualStudio.Text.Classification;
