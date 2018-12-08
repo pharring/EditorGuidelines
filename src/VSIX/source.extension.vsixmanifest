@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Editor_Guidelines.Microsoft Corp..123716ef-b2ed-4fab-bbcf-1d5f84856ca3" Version="2.0.3" Language="en-US" Publisher="Paul Harrington" />
+        <Identity Id="Editor_Guidelines.Microsoft Corp..123716ef-b2ed-4fab-bbcf-1d5f84856ca3" Version="2.0.4" Language="en-US" Publisher="Paul Harrington" />
         <DisplayName>Editor Guidelines</DisplayName>
         <Description xml:space="preserve">Adds vertical column guides to the Visual Studio text editor.</Description>
         <MoreInfo>https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines</MoreInfo>
