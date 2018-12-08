@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.Globalization;
+using Microsoft.ApplicationInsights.DataContracts;
 
 namespace ColumnGuide
 {
@@ -54,9 +55,8 @@ namespace ColumnGuide
 
         public void OnImportsSatisfied()
         {
-            Telemetry.Client.TrackEvent(nameof(ColumnGuideAdornmentFactory) + " initialized");
+            TrackSettings(global::ColumnGuide.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
 
-            TrackSettings("CreateGuidelines");
             if (TextEditorGuidesSettings is INotifyPropertyChanged settingsChanged)
             {
                 settingsChanged.PropertyChanged += OnSettingsChanged;
@@ -71,15 +71,21 @@ namespace ColumnGuide
             }
         }
 
-        private void TrackSettings(string eventName)
+        private void TrackSettings(string eventName) => TrackSettings(new EventTelemetry(eventName));
+
+        private void TrackSettings(EventTelemetry telemetry)
         {
-            var telemetryProperties = new Dictionary<string, string>();
+            var telemetryProperties = telemetry.Properties;
+            var count = 0;
             foreach (var column in TextEditorGuidesSettings.GuideLinePositionsInChars)
             {
-                telemetryProperties.Add("guide" + telemetryProperties.Count.ToString(CultureInfo.InvariantCulture), column.ToString(CultureInfo.InvariantCulture));
+                telemetryProperties.Add("guide" + count.ToString(CultureInfo.InvariantCulture), column.ToString(CultureInfo.InvariantCulture));
+                count++;
             }
 
-            Telemetry.Client.TrackEvent(eventName, telemetryProperties, new Dictionary<string, double> { ["Count"] = telemetryProperties.Count });
+            telemetry.Metrics.Add("Count", count);
+
+            Telemetry.Client.TrackEvent(telemetry);
         }
 
         internal static Brush GetGuidelineBrushFromFontsAndColors(IEditorFormatMap formatMap)
