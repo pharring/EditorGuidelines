@@ -3,7 +3,6 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using Microsoft.VisualStudio.Text.Classification;
 using System.Collections.Generic;
-using System.Windows.Media;
 using System.ComponentModel;
 using System.Globalization;
 using Microsoft.ApplicationInsights.DataContracts;
@@ -38,24 +37,23 @@ namespace ColumnGuide
         {
             // Always create the adornment, even if there are no guidelines, since we
             // respond to dynamic changes.
-            var formatMap = EditorFormatMapService.GetEditorFormatMap(textView);
-            new ColumnGuide(textView, TextEditorGuidesSettings, formatMap, Telemetry);
-
-            // To reduce the amount of telemetry, only report the color for the first instance.
-            if (!_colorReported)
-            {
-                _colorReported = true;
-                var brush = GetGuidelineBrushFromFontsAndColors(formatMap);
-                if (brush != null)
-                {
-                    Telemetry.Client.TrackEvent("CreateGuidelines", new Dictionary<string, string> { ["Color"] = brush.ToString() });
-                }
-            }
+            new ColumnGuide(textView, TextEditorGuidesSettings, _guidelineBrush, Telemetry);
         }
 
         public void OnImportsSatisfied()
         {
-            TrackSettings(global::ColumnGuide.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
+            var formatMap = EditorFormatMapService.GetEditorFormatMap("text");
+            _guidelineBrush = new GuidelineBrush(formatMap);
+
+            var telemetryItem = global::ColumnGuide.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized");
+            telemetryItem.Properties.Add("Color", _guidelineBrush.Brush?.ToString() ?? "unknown");
+
+            TrackSettings(telemetryItem);
+
+            _guidelineBrush.BrushChanged += (sender, newBrush) =>
+            {
+                Telemetry.Client.TrackEvent("GuidelineColorChanged", new Dictionary<string, string> { ["Color"] = newBrush.ToString() });
+            };
 
             if (TextEditorGuidesSettings is INotifyPropertyChanged settingsChanged)
             {
@@ -88,17 +86,6 @@ namespace ColumnGuide
             Telemetry.Client.TrackEvent(telemetry);
         }
 
-        internal static Brush GetGuidelineBrushFromFontsAndColors(IEditorFormatMap formatMap)
-        {
-            var resourceDictionary = formatMap.GetProperties(GuidelineColorDefinition.Name);
-            if (resourceDictionary.Contains(EditorFormatDefinition.BackgroundBrushId))
-            {
-                return resourceDictionary[EditorFormatDefinition.BackgroundBrushId] as Brush;
-            }
-
-            return null;
-        }
-
         [Import]
         private ITextEditorGuidesSettings TextEditorGuidesSettings { get; set; }
 
@@ -108,7 +95,7 @@ namespace ColumnGuide
         [Import]
         private IEditorFormatMapService EditorFormatMapService { get; set; }
 
-        private bool _colorReported;
+        private GuidelineBrush _guidelineBrush;
     }
     #endregion //Adornment Factory
 }

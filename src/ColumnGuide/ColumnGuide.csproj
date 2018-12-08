@@ -119,6 +119,7 @@
   <ItemGroup>
     <Compile Include="ColumnGuide.cs" />
     <Compile Include="ColumnGuideFactory.cs" />
+    <Compile Include="GuidelineBrush.cs" />
     <Compile Include="GuidelineColorDefinition.cs" />
     <Compile Include="HostServices.cs" />
     <Compile Include="ITelemetry.cs" />
