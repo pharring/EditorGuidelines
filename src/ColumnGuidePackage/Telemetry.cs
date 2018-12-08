@@ -1,4 +1,6 @@
-﻿using Microsoft.ApplicationInsights;
+﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
+
+using Microsoft.ApplicationInsights;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using ColumnGuide;
