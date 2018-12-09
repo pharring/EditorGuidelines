@@ -2,18 +2,21 @@
 
 using Microsoft.VisualStudio.Text.Classification;
 using System;
+using System.ComponentModel.Composition;
 using System.Windows.Media;
 
 namespace ColumnGuide
 {
+    [Export]
     internal class GuidelineBrush
     {
         private Brush _brush;
         private readonly IEditorFormatMap _formatMap;
 
-        public GuidelineBrush(IEditorFormatMap formatMap)
+        [ImportingConstructor]
+        private GuidelineBrush(IEditorFormatMapService editorFormatMapService)
         {
-            _formatMap = formatMap;
+            _formatMap = editorFormatMapService.GetEditorFormatMap("text");
             _formatMap.FormatMappingChanged += OnFormatMappingChanged;
         }
 
