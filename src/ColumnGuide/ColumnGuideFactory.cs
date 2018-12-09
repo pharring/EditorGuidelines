@@ -3,7 +3,6 @@
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
-using Microsoft.VisualStudio.Text.Classification;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -39,20 +38,14 @@ namespace ColumnGuide
         {
             // Always create the adornment, even if there are no guidelines, since we
             // respond to dynamic changes.
-            new ColumnGuide(textView, TextEditorGuidesSettings, _guidelineBrush, Telemetry);
+            new ColumnGuide(textView, TextEditorGuidesSettings, GuidelineBrush, Telemetry);
         }
 
         public void OnImportsSatisfied()
         {
-            var formatMap = EditorFormatMapService.GetEditorFormatMap("text");
-            _guidelineBrush = new GuidelineBrush(formatMap);
+            TrackSettings(global::ColumnGuide.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
 
-            var telemetryItem = global::ColumnGuide.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized");
-            telemetryItem.Properties.Add("Color", _guidelineBrush.Brush?.ToString() ?? "unknown");
-
-            TrackSettings(telemetryItem);
-
-            _guidelineBrush.BrushChanged += (sender, newBrush) =>
+            GuidelineBrush.BrushChanged += (sender, newBrush) =>
             {
                 Telemetry.Client.TrackEvent("GuidelineColorChanged", new Dictionary<string, string> { ["Color"] = newBrush.ToString() });
             };
@@ -76,6 +69,8 @@ namespace ColumnGuide
         private void TrackSettings(EventTelemetry telemetry)
         {
             var telemetryProperties = telemetry.Properties;
+            telemetryProperties.Add("Color", GuidelineBrush.Brush?.ToString() ?? "unknown");
+
             var count = 0;
             foreach (var column in TextEditorGuidesSettings.GuideLinePositionsInChars)
             {
@@ -95,9 +90,7 @@ namespace ColumnGuide
         private ITelemetry Telemetry { get; set; }
 
         [Import]
-        private IEditorFormatMapService EditorFormatMapService { get; set; }
-
-        private GuidelineBrush _guidelineBrush;
+        private GuidelineBrush GuidelineBrush { get; set; }
     }
     #endregion //Adornment Factory
 }
