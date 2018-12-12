@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace ColumnGuide
 {
@@ -32,7 +31,6 @@ namespace ColumnGuide
         private INotifyPropertyChanged _settingsChanged;
         private readonly ITelemetry _telemetry;
         private GuidelineBrush _guidelineBrush;
-        private readonly Dispatcher _mainThreadDispatcher;
         private readonly CancellationTokenSource _codingConventionsCancellationTokenSource = new CancellationTokenSource();
         private bool _isUsingCodingConvention;
 
@@ -45,7 +43,6 @@ namespace ColumnGuide
         /// <param name="telemetry">Telemetry interface.</param>
         public ColumnGuide(IWpfTextView view, ITextEditorGuidesSettings settings, GuidelineBrush guidelineBrush, ICodingConventionsManager codingConventionsManager, ITelemetry telemetry)
         {
-            _mainThreadDispatcher = Dispatcher.CurrentDispatcher;
             _view = view;
             _telemetry = telemetry;
             _guidelineBrush = guidelineBrush;
@@ -254,7 +251,7 @@ namespace ColumnGuide
                 }
 
                 // TODO: await JoinableTaskFactory.SwitchToMainThreadAsync();
-                _mainThreadDispatcher.BeginInvoke(new Action<IEnumerable<int>>(PositionsChanged), positions);
+                _view.VisualElement.Dispatcher.BeginInvoke(new Action<IEnumerable<int>>(PositionsChanged), positions);
             }
 
             return Task.FromResult(false);
