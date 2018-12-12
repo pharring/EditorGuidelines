@@ -31,7 +31,7 @@ namespace ColumnGuide
         private INotifyPropertyChanged _settingsChanged;
         private readonly ITelemetry _telemetry;
         private GuidelineBrush _guidelineBrush;
-        private readonly CancellationTokenSource _codingConventionsCancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _codingConventionsCancellationTokenSource;
         private bool _isUsingCodingConvention;
 
         /// <summary>
@@ -48,8 +48,9 @@ namespace ColumnGuide
             _guidelineBrush = guidelineBrush;
             _guidelineBrush.BrushChanged += GuidelineBrushChanged;
 
-            if (view.TextBuffer.Properties.TryGetProperty<ITextDocument>(typeof(ITextDocument), out var textDocument))
+            if (codingConventionsManager != null && view.TextBuffer.Properties.TryGetProperty<ITextDocument>(typeof(ITextDocument), out var textDocument))
             {
+                _codingConventionsCancellationTokenSource = new CancellationTokenSource();
                 var fireAndForgetTask = LoadGuidelinesFromEditorConfigAsync(codingConventionsManager, textDocument.FilePath);
             }
 
