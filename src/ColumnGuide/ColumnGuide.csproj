@@ -62,34 +62,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\15.0.0.0\Microsoft.VisualStudio.CodingConventions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>True</SpecificVersion>
-      <HintPath>..\References\11.0.0.0\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Text.Data, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>True</SpecificVersion>
-      <HintPath>..\References\11.0.0.0\Microsoft.VisualStudio.Text.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\11.0.0.0\Microsoft.VisualStudio.Text.Logic.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Text.UI, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>True</SpecificVersion>
-      <HintPath>..\References\11.0.0.0\Microsoft.VisualStudio.Text.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>True</SpecificVersion>
-      <HintPath>..\References\11.0.0.0\Microsoft.VisualStudio.Text.UI.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -99,6 +71,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.1.0" />
+    <PackageReference Include="VSSDK.Shell.Immutable.10" Version="10.0.4" />
+    <PackageReference Include="VSSDK.Shell.Interop.10" Version="10.0.4" />
+    <PackageReference Include="VSSDK.Text.11" Version="11.0.4" />
+    <PackageReference Include="VSSDK.TextManager.Interop.10" Version="10.0.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColumnGuide.cs" />
