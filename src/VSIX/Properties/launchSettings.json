@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Editor Guidelines": {
+      "commandName": "Executable",
+      "executablePath": "$(DevEnvDir)devenv.exe",
+      "commandLineArgs": "/rootsuffix $(VSSDKTargetPlatformRegRootSuffix) /log"
+    }
+  }
+}
