@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -11,3 +12,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(false)]
+
+[assembly: ProvideCodeBase(CodeBase = "Microsoft.ApplicationInsights.dll")]
