@@ -17,9 +17,6 @@
 
     <AssemblyTitle>Editor Guidelines UI Package</AssemblyTitle>
     <Description>Adds commands for the Editor Guidelines extension</Description>
-    <Company>Paul Harrington</Company>
-    <Copyright>Copyright © 2018 Paul Harrington</Copyright>
-    <Version>2.1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup>
