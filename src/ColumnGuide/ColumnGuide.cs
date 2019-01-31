@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
+using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.VisualStudio.CodingConventions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -247,7 +248,10 @@ namespace ColumnGuide
 
                 if (!_sentEditorConfigTelemetry)
                 {
-                    _telemetry.Client.TrackEvent("EditorConfig", new Dictionary<string, string> { ["Convention"] = convention });
+                    var eventTelemetry = new EventTelemetry("EditorConfig");
+                    eventTelemetry.Properties.Add("Convention", convention);
+                    ColumnGuideAdornmentFactory.AddBrushColorAndGuidelinePositionsToTelemetry(eventTelemetry, _guidelineBrush.Brush, positions);
+                    _telemetry.Client.TrackEvent(eventTelemetry);
                     _sentEditorConfigTelemetry = true;
                 }
 

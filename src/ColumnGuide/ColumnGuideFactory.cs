@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Globalization;
+using System.Windows.Media;
 
 namespace ColumnGuide
 {
@@ -69,19 +70,23 @@ namespace ColumnGuide
 
         private void TrackSettings(EventTelemetry telemetry)
         {
-            var telemetryProperties = telemetry.Properties;
-            telemetryProperties.Add("Color", GuidelineBrush.Brush?.ToString() ?? "unknown");
+            AddBrushColorAndGuidelinePositionsToTelemetry(telemetry, GuidelineBrush.Brush, TextEditorGuidesSettings.GuideLinePositionsInChars);
+            Telemetry.Client.TrackEvent(telemetry);
+        }
+
+        internal static void AddBrushColorAndGuidelinePositionsToTelemetry(EventTelemetry eventTelemetry, Brush brush, IEnumerable<int> positions)
+        {
+            var telemetryProperties = eventTelemetry.Properties;
+            telemetryProperties.Add("Color", brush?.ToString() ?? "unknown");
 
             var count = 0;
-            foreach (var column in TextEditorGuidesSettings.GuideLinePositionsInChars)
+            foreach (var column in positions)
             {
                 telemetryProperties.Add("guide" + count.ToString(CultureInfo.InvariantCulture), column.ToString(CultureInfo.InvariantCulture));
                 count++;
             }
 
-            telemetry.Metrics.Add("Count", count);
-
-            Telemetry.Client.TrackEvent(telemetry);
+            eventTelemetry.Metrics.Add("Count", count);
         }
 
         [Import]
