@@ -82,10 +82,6 @@
     <CodeAnalysisRuleSet>ColumnGuide.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.ApplicationInsights, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.2.1.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.CodingConventions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\15.0.0.0\Microsoft.VisualStudio.CodingConventions.dll</HintPath>
@@ -126,6 +122,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.1.0" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="ColumnGuide.cs" />
     <Compile Include="ColumnGuideFactory.cs" />
     <Compile Include="GuidelineBrush.cs" />
@@ -140,7 +139,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ColumnGuide.ruleset" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
