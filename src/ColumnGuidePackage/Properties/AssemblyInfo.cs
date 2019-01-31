@@ -14,3 +14,4 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant(false)]
 
 [assembly: ProvideCodeBase(CodeBase = "Microsoft.ApplicationInsights.dll")]
+[assembly: ProvideCodeBase(CodeBase = "Microsoft.VisualStudio.CodingConventions.dll")]

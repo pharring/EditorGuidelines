@@ -4,7 +4,7 @@
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
 
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net46</TargetFramework>
     <RootNamespace>Editor_Guidelines</RootNamespace>
     <AssemblyName>EditorGuidelines</AssemblyName>
 
@@ -65,6 +65,7 @@
     <ItemGroup>
       <_ReferenceCopyLocalBinaries Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' != '.pdb'" />
       <VSIXSourceItem Include="@(_ReferenceCopyLocalBinaries)" Condition="'%(_ReferenceCopyLocalBinaries.NuGetPackageId)' == 'Microsoft.ApplicationInsights'" />
+      <VSIXSourceItem Include="@(_ReferenceCopyLocalBinaries)" Condition="'%(_ReferenceCopyLocalBinaries.NuGetPackageId)' == 'Microsoft.VisualStudio.CodingConventions'" />
     </ItemGroup>
   </Target>
 
