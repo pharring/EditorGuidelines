@@ -18,6 +18,8 @@
     <AssemblyTitle>Editor Guidelines UI Package</AssemblyTitle>
     <Description>Adds commands for the Editor Guidelines extension</Description>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <!-- Do not deploy the VSIX in Azure DevOps CI builds. -->
+    <DeployExtension Condition="'$(BUILD_BUILDID)' != ''">false</DeployExtension>
   </PropertyGroup>
 
   <PropertyGroup>
