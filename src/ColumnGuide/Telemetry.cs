@@ -13,7 +13,7 @@ namespace ColumnGuide
     [Export(typeof(ITelemetry))]
     internal class Telemetry : ITelemetry
     {
-        private const string c_InstrumentationKey = "f8324fcc-eb39-4931-bebc-968aab7d3d7d";
+        private const string c_instrumentationKey = "f8324fcc-eb39-4931-bebc-968aab7d3d7d";
 
         public TelemetryClient Client { get; } = CreateClient();
 
@@ -39,7 +39,7 @@ namespace ColumnGuide
         {
             var configuration = new TelemetryConfiguration
             {
-                InstrumentationKey = c_InstrumentationKey,
+                InstrumentationKey = c_instrumentationKey,
                 TelemetryChannel = new InMemoryChannel
                 {
 #if DEBUG

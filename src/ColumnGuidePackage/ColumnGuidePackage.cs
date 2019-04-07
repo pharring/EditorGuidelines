@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using System.Collections.Generic;
 
 using static System.Globalization.CultureInfo;
+using static Microsoft.ColumnGuidePackage.Guids;
 
 namespace Microsoft.ColumnGuidePackage
 {
@@ -29,7 +30,7 @@ namespace Microsoft.ColumnGuidePackage
     [PackageRegistration(UseManagedResourcesOnly = true)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 2)]
-    [Guid(GuidList.guidColumnGuidePkgString)]
+    [Guid(GuidColumnGuidePkgString)]
 #pragma warning disable CA1724 // Type name conflicts with namespace name
     public sealed class ColumnGuidePackage : Package
 #pragma warning restore CA1724 // Type name conflicts with namespace name
@@ -63,19 +64,19 @@ namespace Microsoft.ColumnGuidePackage
 
             if (GetService(typeof(IMenuCommandService)) is OleMenuCommandService mcs)
             {
-                _addGuidelineCommand = new OleMenuCommand(AddColumnGuideExecuted, null, AddColumnGuideBeforeQueryStatus, new CommandID(GuidList.guidColumnGuideCmdSet, (int)PkgCmdIDList.cmdidAddColumnGuideline))
+                _addGuidelineCommand = new OleMenuCommand(AddColumnGuideExecuted, null, AddColumnGuideBeforeQueryStatus, new CommandID(GuidColumnGuideCmdSet, (int)PkgCmdIDList.cmdidAddColumnGuideline))
                 {
                     ParametersDescription = "<column>"
                 };
                 mcs.AddCommand(_addGuidelineCommand);
 
-                _removeGuidelineCommand = new OleMenuCommand(RemoveColumnGuideExecuted, null, RemoveColumnGuideBeforeChangeQueryStatus, new CommandID(GuidList.guidColumnGuideCmdSet, (int)PkgCmdIDList.cmdidRemoveColumnGuideline))
+                _removeGuidelineCommand = new OleMenuCommand(RemoveColumnGuideExecuted, null, RemoveColumnGuideBeforeChangeQueryStatus, new CommandID(GuidColumnGuideCmdSet, (int)PkgCmdIDList.cmdidRemoveColumnGuideline))
                 {
                     ParametersDescription = "<column>"
                 };
                 mcs.AddCommand(_removeGuidelineCommand);
 
-                mcs.AddCommand(new MenuCommand(RemoveAllGuidelinesExecuted, new CommandID(GuidList.guidColumnGuideCmdSet, (int)PkgCmdIDList.cmdidRemoveAllColumnGuidelines)));
+                mcs.AddCommand(new MenuCommand(RemoveAllGuidelinesExecuted, new CommandID(GuidColumnGuideCmdSet, (int)PkgCmdIDList.cmdidRemoveAllColumnGuidelines)));
             }
         }
 

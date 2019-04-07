@@ -15,14 +15,14 @@ namespace ColumnGuide
 {
     [Export(typeof(ITextEditorGuidesSettings))]
     [Export(typeof(ITextEditorGuidesSettingsChanger))]
-    sealed class TextEditorGuidesSettings : ITextEditorGuidesSettings, INotifyPropertyChanged, ITextEditorGuidesSettingsChanger
+    internal sealed class TextEditorGuidesSettings : ITextEditorGuidesSettings, INotifyPropertyChanged, ITextEditorGuidesSettingsChanger
     {
-        private const int _maxGuides = 12;
+        private const int c_maxGuides = 12;
 
         [Import]
-        Lazy<HostServices> HostServices { get; set; }
+        private Lazy<HostServices> HostServices { get; set; }
 
-        IVsSettingsStore ReadOnlyUserSettings
+        private IVsSettingsStore ReadOnlyUserSettings
         {
             get
             {
@@ -32,7 +32,7 @@ namespace ColumnGuide
             }
         }
 
-        IVsWritableSettingsStore ReadWriteUserSettings
+        private IVsWritableSettingsStore ReadWriteUserSettings
         {
             get
             {
@@ -88,7 +88,7 @@ namespace ColumnGuide
                 throw new ArgumentOutOfRangeException(nameof(column), "The paramenter must be between 1 and 10,000");
             }
 
-            if (GetCountOfGuidelines() >= _maxGuides)
+            if (GetCountOfGuidelines() >= c_maxGuides)
             {
                 return false; // Cannot add more than _maxGuides guidelines
             }
@@ -137,7 +137,7 @@ namespace ColumnGuide
                 return false;
             }
 
-            if (GetCountOfGuidelines() >= _maxGuides)
+            if (GetCountOfGuidelines() >= c_maxGuides)
             {
                 return false;
             }
@@ -290,7 +290,7 @@ namespace ColumnGuide
                     {
                         columnCount++;
                         yield return column;
-                        if (columnCount >= _maxGuides)
+                        if (columnCount >= c_maxGuides)
                         {
                             break;
                         }

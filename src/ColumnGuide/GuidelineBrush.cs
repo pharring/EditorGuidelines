@@ -22,7 +22,7 @@ namespace ColumnGuide
 
         private void OnFormatMappingChanged(object sender, FormatItemsEventArgs e)
         {
-            if (e.ChangedItems.Contains(GuidelineColorDefinition.Name))
+            if (e.ChangedItems.Contains(GuidelineColorDefinition.c_name))
             {
                 _brush = GetGuidelineBrushFromFontsAndColors();
                 BrushChanged?.Invoke(this, _brush);
@@ -35,7 +35,7 @@ namespace ColumnGuide
 
         private Brush GetGuidelineBrushFromFontsAndColors()
         {
-            var resourceDictionary = _formatMap.GetProperties(GuidelineColorDefinition.Name);
+            var resourceDictionary = _formatMap.GetProperties(GuidelineColorDefinition.c_name);
             if (resourceDictionary.Contains(EditorFormatDefinition.BackgroundBrushId))
             {
                 return resourceDictionary[EditorFormatDefinition.BackgroundBrushId] as Brush;

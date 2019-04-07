@@ -7,14 +7,14 @@ using System.Windows.Media;
 
 namespace ColumnGuide
 {
-    [Export(typeof(EditorFormatDefinition)), UserVisible(true), Name(GuidelineColorDefinition.Name)]
+    [Export(typeof(EditorFormatDefinition)), UserVisible(true), Name(c_name)]
     public class GuidelineColorDefinition : EditorFormatDefinition
     {
-        internal const string Name = "Guideline";
+        internal const string c_name = "Guideline";
 
         public GuidelineColorDefinition()
         {
-            DisplayName = "Guideline";
+            DisplayName = c_name;
             ForegroundCustomizable = false;
             BackgroundColor = Colors.DarkRed;
         }
