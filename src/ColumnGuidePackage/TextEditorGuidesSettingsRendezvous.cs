@@ -15,7 +15,7 @@ namespace Microsoft.ColumnGuidePackage
             {
                 if (_instance == null)
                 {
-                    IComponentModel componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
+                    var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
                     _instance = componentModel.GetService<ITextEditorGuidesSettingsChanger>();
                 }
 

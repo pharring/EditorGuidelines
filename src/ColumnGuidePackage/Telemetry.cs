@@ -13,7 +13,7 @@ namespace Microsoft.ColumnGuidePackage
 
         private static TelemetryClient ImportClient()
         {
-            IComponentModel componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
+            var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             var telemetry = componentModel.GetService<ITelemetry>();
             return telemetry.Client;
         }

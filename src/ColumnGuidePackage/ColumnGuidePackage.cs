@@ -2,8 +2,6 @@
 
 using System;
 using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -11,6 +9,8 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using System.Collections.Generic;
+
+using static System.Globalization.CultureInfo;
 
 namespace Microsoft.ColumnGuidePackage
 {
@@ -30,7 +30,9 @@ namespace Microsoft.ColumnGuidePackage
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 2)]
     [Guid(GuidList.guidColumnGuidePkgString)]
+#pragma warning disable CA1724 // Type name conflicts with namespace name
     public sealed class ColumnGuidePackage : Package
+#pragma warning restore CA1724 // Type name conflicts with namespace name
     {
         /// <summary>
         /// Default constructor of the package.
@@ -59,8 +61,7 @@ namespace Microsoft.ColumnGuidePackage
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
 
-            OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (null != mcs)
+            if (GetService(typeof(IMenuCommandService)) is OleMenuCommandService mcs)
             {
                 _addGuidelineCommand = new OleMenuCommand(AddColumnGuideExecuted, null, AddColumnGuideBeforeQueryStatus, new CommandID(GuidList.guidColumnGuideCmdSet, (int)PkgCmdIDList.cmdidAddColumnGuideline))
                 {
@@ -82,11 +83,9 @@ namespace Microsoft.ColumnGuidePackage
 
         private string GetShellVersion()
         {
-            var shell = GetService(typeof(SVsShell)) as IVsShell;
-            if (shell != null)
+            if (GetService(typeof(SVsShell)) is IVsShell shell)
             {
-                object obj;
-                if (ErrorHandler.Succeeded(shell.GetProperty((int)__VSSPROPID5.VSSPROPID_ReleaseVersion, out obj)) && obj != null)
+                if (ErrorHandler.Succeeded(shell.GetProperty((int)__VSSPROPID5.VSSPROPID_ReleaseVersion, out var obj)) && obj != null)
                 {
                     return obj.ToString();
                 }
@@ -100,13 +99,13 @@ namespace Microsoft.ColumnGuidePackage
 
         private void AddColumnGuideBeforeQueryStatus(object sender, EventArgs e)
         {
-            int currentColumn = GetCurrentEditorColumn();
+            var currentColumn = GetCurrentEditorColumn();
             _addGuidelineCommand.Enabled = TextEditorGuidesSettingsRendezvous.Instance.CanAddGuideline(currentColumn);
         }
 
         private void RemoveColumnGuideBeforeChangeQueryStatus(object sender, EventArgs e)
         {
-            int currentColumn = GetCurrentEditorColumn();
+            var currentColumn = GetCurrentEditorColumn();
             _removeGuidelineCommand.Enabled = TextEditorGuidesSettingsRendezvous.Instance.CanRemoveGuideline(currentColumn);
         }
 
@@ -123,9 +122,10 @@ namespace Microsoft.ColumnGuidePackage
             var inValue = ((OleMenuCmdEventArgs)e).InValue as string;
             if (!string.IsNullOrEmpty(inValue))
             {
-                int column;
-                if (!int.TryParse(inValue, out column) || column < 0)
+                if (!int.TryParse(inValue, out var column) || column < 0)
+                {
                     throw new ArgumentException("Invalid column");
+                }
 
                 Telemetry.Client.TrackEvent("Command parameter used");
                 return column;
@@ -141,20 +141,20 @@ namespace Microsoft.ColumnGuidePackage
         /// </summary>
         private void AddColumnGuideExecuted(object sender, EventArgs e)
         {
-            int column = GetApplicableColumn(e);
+            var column = GetApplicableColumn(e);
             if (column >= 0)
             {
-                Telemetry.Client.TrackEvent(nameof(AddColumnGuideExecuted), new Dictionary<string, string>() { ["Column"] = column.ToString() });
+                Telemetry.Client.TrackEvent(nameof(AddColumnGuideExecuted), new Dictionary<string, string>() { ["Column"] = column.ToString(InvariantCulture) });
                 TextEditorGuidesSettingsRendezvous.Instance.AddGuideline(column);
             }
         }
 
         private void RemoveColumnGuideExecuted(object sender, EventArgs e)
         {
-            int column = GetApplicableColumn(e);
+            var column = GetApplicableColumn(e);
             if (column >= 0)
             {
-                Telemetry.Client.TrackEvent(nameof(RemoveColumnGuideExecuted), new Dictionary<string, string>() { ["Column"] = column.ToString() });
+                Telemetry.Client.TrackEvent(nameof(RemoveColumnGuideExecuted), new Dictionary<string, string>() { ["Column"] = column.ToString(InvariantCulture) });
                 TextEditorGuidesSettingsRendezvous.Instance.RemoveGuideline(column);
             }
         }
@@ -172,12 +172,10 @@ namespace Microsoft.ColumnGuidePackage
         /// active view in the active document is not a text view.</returns>
         private IVsTextView GetActiveTextView()
         {
-            IVsMonitorSelection selection = GetService(typeof(IVsMonitorSelection)) as IVsMonitorSelection;
-            object frameObj = null;
-            ErrorHandler.ThrowOnFailure(selection.GetCurrentElementValue((uint)VSConstants.VSSELELEMID.SEID_DocumentFrame, out frameObj));
+            var selection = GetService(typeof(IVsMonitorSelection)) as IVsMonitorSelection;
+            ErrorHandler.ThrowOnFailure(selection.GetCurrentElementValue((uint)VSConstants.VSSELELEMID.SEID_DocumentFrame, out var frameObj));
 
-            IVsWindowFrame frame = frameObj as IVsWindowFrame;
-            if (frame == null)
+            if (!(frameObj is IVsWindowFrame frame))
             {
                 return null;
             }
@@ -189,17 +187,15 @@ namespace Microsoft.ColumnGuidePackage
         {
             if (windowFrame == null)
             {
-                throw new ArgumentException("windowFrame");
+                throw new ArgumentNullException(nameof(windowFrame));
             }
 
-            object pvar;
-            ErrorHandler.ThrowOnFailure(windowFrame.GetProperty((int)__VSFPROPID.VSFPROPID_DocView, out pvar));
+            ErrorHandler.ThrowOnFailure(windowFrame.GetProperty((int)__VSFPROPID.VSFPROPID_DocView, out var pvar));
 
-            IVsTextView textView = pvar as IVsTextView;
+            var textView = pvar as IVsTextView;
             if (textView == null)
             {
-                IVsCodeWindow codeWin = pvar as IVsCodeWindow;
-                if (codeWin != null)
+                if (pvar is IVsCodeWindow codeWin)
                 {
                     ErrorHandler.ThrowOnFailure(codeWin.GetLastActiveView(out textView));
                 }
@@ -211,23 +207,20 @@ namespace Microsoft.ColumnGuidePackage
         {
             if (view == null)
             {
-                throw new ArgumentNullException("view");
+                throw new ArgumentNullException(nameof(view));
             }
 
-            IVsUserData userData = view as IVsUserData;
-            if (userData == null)
+            if (!(view is IVsUserData userData))
             {
                 throw new InvalidOperationException();
             }
 
-            object objTextViewHost;
-            if (VSConstants.S_OK != userData.GetData(Microsoft.VisualStudio.Editor.DefGuidList.guidIWpfTextViewHost, out objTextViewHost))
+            if (VSConstants.S_OK != userData.GetData(Microsoft.VisualStudio.Editor.DefGuidList.guidIWpfTextViewHost, out var objTextViewHost))
             {
                 throw new InvalidOperationException();
             }
 
-            IWpfTextViewHost textViewHost = objTextViewHost as IWpfTextViewHost;
-            if (textViewHost == null)
+            if (!(objTextViewHost is IWpfTextViewHost textViewHost))
             {
                 throw new InvalidOperationException();
             }
@@ -244,14 +237,14 @@ namespace Microsoft.ColumnGuidePackage
         private static int GetCaretColumn(IWpfTextView textView)
         {
             // This is the code the editor uses to populate the status bar. Thanks, Jack!
-            Microsoft.VisualStudio.Text.Formatting.ITextViewLine caretViewLine = textView.Caret.ContainingTextViewLine;
-            double columnWidth = textView.FormattedLineSource.ColumnWidth;
+            var caretViewLine = textView.Caret.ContainingTextViewLine;
+            var columnWidth = textView.FormattedLineSource.ColumnWidth;
             return (int)(Math.Round((textView.Caret.Left - caretViewLine.Left) / columnWidth));
         }
 
         private int GetCurrentEditorColumn()
         {
-            IVsTextView view = GetActiveTextView();
+            var view = GetActiveTextView();
             if (view == null)
             {
                 return -1;
@@ -259,8 +252,8 @@ namespace Microsoft.ColumnGuidePackage
 
             try
             {
-                IWpfTextView textView = GetTextViewFromVsTextView(view);
-                int column = GetCaretColumn(textView);
+                var textView = GetTextViewFromVsTextView(view);
+                var column = GetCaretColumn(textView);
 
                 // Note: GetCaretColumn returns 0-based positions. Guidelines are 1-based positions.
                 // However, do not subtract one here since the caret is positioned to the left of
