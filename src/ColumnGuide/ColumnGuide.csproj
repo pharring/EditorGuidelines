@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.1" />
     <PackageReference Include="Microsoft.VisualStudio.CodingConventions" Version="1.1.20180503.2" />
     <PackageReference Include="VSSDK.Shell.Immutable.10" Version="10.0.4" />
     <PackageReference Include="VSSDK.Shell.Interop.10" Version="10.0.4" />

@@ -7,8 +7,9 @@ using Microsoft.VisualStudio.Utilities;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
-using System.Globalization;
 using System.Windows.Media;
+
+using static System.Globalization.CultureInfo;
 
 namespace ColumnGuide
 {
@@ -40,7 +41,7 @@ namespace ColumnGuide
         {
             // Always create the adornment, even if there are no guidelines, since we
             // respond to dynamic changes.
-            new ColumnGuide(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventionsManager, Telemetry);
+            var _ = new ColumnGuide(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventionsManager, Telemetry);
         }
 
         public void OnImportsSatisfied()
@@ -49,7 +50,7 @@ namespace ColumnGuide
 
             GuidelineBrush.BrushChanged += (sender, newBrush) =>
             {
-                Telemetry.Client.TrackEvent("GuidelineColorChanged", new Dictionary<string, string> { ["Color"] = newBrush.ToString() });
+                Telemetry.Client.TrackEvent("GuidelineColorChanged", new Dictionary<string, string> { ["Color"] = newBrush.ToString(InvariantCulture) });
             };
 
             if (TextEditorGuidesSettings is INotifyPropertyChanged settingsChanged)
@@ -77,12 +78,12 @@ namespace ColumnGuide
         internal static void AddBrushColorAndGuidelinePositionsToTelemetry(EventTelemetry eventTelemetry, Brush brush, IEnumerable<int> positions)
         {
             var telemetryProperties = eventTelemetry.Properties;
-            telemetryProperties.Add("Color", brush?.ToString() ?? "unknown");
+            telemetryProperties.Add("Color", brush?.ToString(InvariantCulture) ?? "unknown");
 
             var count = 0;
             foreach (var column in positions)
             {
-                telemetryProperties.Add("guide" + count.ToString(CultureInfo.InvariantCulture), column.ToString(CultureInfo.InvariantCulture));
+                telemetryProperties.Add("guide" + count.ToString(InvariantCulture), column.ToString(InvariantCulture));
                 count++;
             }
 

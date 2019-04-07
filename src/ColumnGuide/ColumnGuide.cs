@@ -19,7 +19,7 @@ namespace ColumnGuide
     /// <summary>
     /// Adornment class that draws vertical guide lines beneath the text
     /// </summary>
-    class ColumnGuide
+    class ColumnGuide : IDisposable
     {
         private const double _lineThickness = 1.0;
         private static bool _sentEditorConfigTelemetry;
@@ -101,9 +101,7 @@ namespace ColumnGuide
         }
 
         private void InitializeGuidelines(IEnumerable<int> guidelinePositions)
-        {
-            _guidelines = CreateGuidelines(guidelinePositions);
-        }
+            => _guidelines = CreateGuidelines(guidelinePositions);
 
         private void SettingsChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -125,9 +123,9 @@ namespace ColumnGuide
 
         private void OnViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            bool fUpdatePositions = false;
+            var fUpdatePositions = false;
 
-            IFormattedLineSource lineSource = _view.FormattedLineSource;
+            var lineSource = _view.FormattedLineSource;
             if (lineSource == null)
             {
                 return;
@@ -166,7 +164,7 @@ namespace ColumnGuide
             var dashArray = new DoubleCollection(new double[] { 1.0, 3.0 });
             var result = new List<Line>();
 
-            foreach (int column in guidelinePositions)
+            foreach (var column in guidelinePositions)
             {
                 var line = new Line()
                 {
@@ -184,7 +182,7 @@ namespace ColumnGuide
 
         void UpdatePosition(Line line)
         {
-            int column = (int)line.DataContext;
+            var column = (int)line.DataContext;
 
             line.X1 = line.X2 = _baseIndentation + 0.5 + column * _columnWidth;
             line.Y1 = _view.ViewportTop;
@@ -193,7 +191,7 @@ namespace ColumnGuide
 
         void UpdatePositions()
         {
-            foreach (Line line in _guidelines)
+            foreach (var line in _guidelines)
             {
                 UpdatePosition(line);
             }
@@ -202,7 +200,7 @@ namespace ColumnGuide
         void AddGuidelinesToAdornmentLayer()
         {
             //Grab a reference to the adornment layer that this adornment should be added to
-            IAdornmentLayer adornmentLayer = _view.GetAdornmentLayer("ColumnGuide");
+            var adornmentLayer = _view.GetAdornmentLayer("ColumnGuide");
             if (adornmentLayer == null)
             {
                 return;
@@ -227,12 +225,12 @@ namespace ColumnGuide
         private async Task LoadGuidelinesFromEditorConfigAsync(ICodingConventionsManager codingConventionsManager, string filePath)
         {
             var cancellationToken = _codingConventionsCancellationTokenSource.Token;
-            var codingConventionContext = await codingConventionsManager.GetConventionContextAsync(filePath, cancellationToken);
+            var codingConventionContext = await codingConventionsManager.GetConventionContextAsync(filePath, cancellationToken).ConfigureAwait(false);
 
             codingConventionContext.CodingConventionsChangedAsync += OnCodingConventionsChangedAsync;
             cancellationToken.Register(() => codingConventionContext.CodingConventionsChangedAsync -= OnCodingConventionsChangedAsync);
 
-            await UpdateGuidelinesFromCodingConventionAsync(codingConventionContext, cancellationToken);
+            await UpdateGuidelinesFromCodingConventionAsync(codingConventionContext, cancellationToken).ConfigureAwait(false);
         }
 
         private Task OnCodingConventionsChangedAsync(object sender, CodingConventionsChangedEventArgs arg) => UpdateGuidelinesFromCodingConventionAsync((ICodingConventionContext)sender, _codingConventionsCancellationTokenSource.Token);
@@ -268,7 +266,7 @@ namespace ColumnGuide
             var result = new List<int>(positionsAsString.Length);
             foreach (var position in positionsAsString)
             {
-                if (int.TryParse(position, out int column) && column >= 0 && column < 10000 && !result.Contains(column))
+                if (int.TryParse(position, out var column) && column >= 0 && column < 10000 && !result.Contains(column))
                 {
                     result.Add(column);
                 }
@@ -284,7 +282,7 @@ namespace ColumnGuide
                 return true;
             }
 
-            int i = 0;
+            var i = 0;
             foreach (var newPosition in newPositions)
             {
                 if (i >= _guidelines.Count)
@@ -304,5 +302,7 @@ namespace ColumnGuide
 
             return i != _guidelines.Count;
         }
+
+        public void Dispose() => _codingConventionsCancellationTokenSource.Dispose();
     }
 }

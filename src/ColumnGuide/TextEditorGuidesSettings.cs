@@ -9,6 +9,8 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System.ComponentModel;
 using System.Text;
 
+using static System.Globalization.CultureInfo;
+
 namespace ColumnGuide
 {
     [Export(typeof(ITextEditorGuidesSettings))]
@@ -24,7 +26,7 @@ namespace ColumnGuide
         {
             get
             {
-                IVsSettingsManager manager = HostServices.Value.SettingsManagerService;
+                var manager = HostServices.Value.SettingsManagerService;
                 Marshal.ThrowExceptionForHR(manager.GetReadOnlySettingsStore((uint)__VsSettingsScope.SettingsScope_UserSettings, out var store));
                 return store;
             }
@@ -34,7 +36,7 @@ namespace ColumnGuide
         {
             get
             {
-                IVsSettingsManager manager = HostServices.Value.SettingsManagerService;
+                var manager = HostServices.Value.SettingsManagerService;
                 Marshal.ThrowExceptionForHR(manager.GetWritableSettingsStore((uint)__VsSettingsScope.SettingsScope_UserSettings, out var store));
                 return store;
             }
@@ -43,34 +45,34 @@ namespace ColumnGuide
 
         private string GetUserSettingsString(string key, string value)
         {
-            IVsSettingsStore store = ReadOnlyUserSettings;
-            Marshal.ThrowExceptionForHR(store.GetStringOrDefault(key, value, String.Empty, out string result));
+            var store = ReadOnlyUserSettings;
+            Marshal.ThrowExceptionForHR(store.GetStringOrDefault(key, value, string.Empty, out var result));
             return result;
         }
 
         private void WriteUserSettingsString(string key, string propertyName, string value)
         {
-            IVsWritableSettingsStore store = ReadWriteUserSettings;
+            var store = ReadWriteUserSettings;
             Marshal.ThrowExceptionForHR(store.SetString(key, propertyName, value));
         }
 
         private void WriteSettings(Color color, IEnumerable<int> columns)
         {
-            string value = ComposeSettingsString(color, columns);
+            var value = ComposeSettingsString(color, columns);
             GuidelinesConfiguration = value;
         }
 
         private static string ComposeSettingsString(Color color, IEnumerable<int> columns)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("RGB({0},{1},{2})", color.R, color.G, color.B);
-            IEnumerator<int> columnsEnumerator = columns.GetEnumerator();
+            var sb = new StringBuilder();
+            sb.AppendFormat(InvariantCulture, "RGB({0},{1},{2})", color.R, color.G, color.B);
+            var columnsEnumerator = columns.GetEnumerator();
             if( columnsEnumerator.MoveNext() )
             {
-                sb.AppendFormat(" {0}", columnsEnumerator.Current);
+                sb.AppendFormat(InvariantCulture, " {0}", columnsEnumerator.Current);
                 while( columnsEnumerator.MoveNext() )
                 {
-                    sb.AppendFormat(", {0}", columnsEnumerator.Current);
+                    sb.AppendFormat(InvariantCulture, ", {0}", columnsEnumerator.Current);
                 }
             }
 
@@ -83,7 +85,7 @@ namespace ColumnGuide
         {
             if (!IsValidColumn(column))
             {
-                throw new ArgumentOutOfRangeException("column", "The paramenter must be between 1 and 10,000");
+                throw new ArgumentOutOfRangeException(nameof(column), "The paramenter must be between 1 and 10,000");
             }
 
             if (GetCountOfGuidelines() >= _maxGuides)
@@ -92,7 +94,7 @@ namespace ColumnGuide
             }
 
             // Check for duplicates
-            List<int> columns = new List<int>(GuideLinePositionsInChars);
+            var columns = new List<int>(GuideLinePositionsInChars);
             if (columns.Contains(column))
             {
                 return false;
@@ -100,7 +102,7 @@ namespace ColumnGuide
 
             columns.Add(column);
 
-            WriteSettings(this.GuidelinesColor, columns);
+            WriteSettings(GuidelinesColor, columns);
             return true;
         }
 
@@ -108,10 +110,10 @@ namespace ColumnGuide
         {
             if (!IsValidColumn(column))
             {
-                throw new ArgumentOutOfRangeException("column", "The paramenter must be between 1 and 10,000");
+                throw new ArgumentOutOfRangeException(nameof(column), "The paramenter must be between 1 and 10,000");
             }
 
-            List<int> columns = new List<int>(GuideLinePositionsInChars);
+            var columns = new List<int>(GuideLinePositionsInChars);
             if (!columns.Remove(column))
             {
                 // Not present
@@ -124,7 +126,7 @@ namespace ColumnGuide
                 columns.Clear();
             }
 
-            WriteSettings(this.GuidelinesColor, columns);
+            WriteSettings(GuidelinesColor, columns);
             return true;
         }
 
@@ -155,9 +157,7 @@ namespace ColumnGuide
         }
 
         public void RemoveAllGuidelines()
-        {
-            WriteSettings(this.GuidelinesColor, new int[0]);
-        }
+            => WriteSettings(GuidelinesColor, Array.Empty<int>());
 
         #endregion
 
@@ -171,25 +171,28 @@ namespace ColumnGuide
 
         private int GetCountOfGuidelines()
         {
-            int i = 0;
-            foreach (int value in GuideLinePositionsInChars)
+            var i = 0;
+            foreach (var value in GuideLinePositionsInChars)
             {
                 i++;
             }
             return i;
         }
 
-        private static bool IsValidColumn(int column)
-        {
-            // -ve is not allowed
-            // zero is allowed (per user request)
-            // 10000 seems like a sensible upper limit
-            return 0 <= column && column <= 10000;
-        }
+        /// <summary>
+        /// Check if the given column is valid.
+        /// Negative values are not allowed.
+        /// Zero is allowed (per user request)
+        /// 10000 seems like a sensible upper limit.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns>True if <paramref name="column"/> is valid.</returns>
+        private static bool IsValidColumn(int column) =>
+            0 <= column && column <= 10000;
 
         private bool IsGuidelinePresent(int column)
         {
-            foreach (int value in GuideLinePositionsInChars)
+            foreach (var value in GuideLinePositionsInChars)
             {
                 if (value == column)
                 {
@@ -224,28 +227,26 @@ namespace ColumnGuide
         }
 
         private void FirePropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         // Parse a color out of a string that begins like "RGB(255,0,0)"
         public Color GuidelinesColor
         {
             get
             {
-                string config = GuidelinesConfiguration;
-                if (!String.IsNullOrEmpty(config) && config.StartsWith("RGB(", StringComparison.Ordinal))
+                var config = GuidelinesConfiguration;
+                if (!string.IsNullOrEmpty(config) && config.StartsWith("RGB(", StringComparison.Ordinal))
                 {
-                    int lastParen = config.IndexOf(')');
+                    var lastParen = config.IndexOf(')');
                     if (lastParen > 4)
                     {
-                        string[] rgbs = config.Substring(4, lastParen - 4).Split(',');
+                        var rgbs = config.Substring(4, lastParen - 4).Split(',');
 
                         if (rgbs.Length >= 3)
                         {
-                            if (byte.TryParse(rgbs[0], out byte r) &&
-                                byte.TryParse(rgbs[1], out byte g) &&
-                                byte.TryParse(rgbs[2], out byte b))
+                            if (byte.TryParse(rgbs[0], out var r) &&
+                                byte.TryParse(rgbs[1], out var g) &&
+                                byte.TryParse(rgbs[2], out var b))
                             {
                                 return Color.FromRgb(r, g, b);
                             }
@@ -255,10 +256,7 @@ namespace ColumnGuide
                 return Colors.DarkRed;
             }
 
-            set
-            {
-                WriteSettings(value, GuideLinePositionsInChars);
-            }
+            set => WriteSettings(value, GuideLinePositionsInChars);
         }
 
         // Parse a list of integer values out of a string that looks like "RGB(255,0,0) 1,5,10,80"
@@ -266,8 +264,8 @@ namespace ColumnGuide
         {
             get
             {
-                string config = GuidelinesConfiguration;
-                if (String.IsNullOrEmpty(config))
+                var config = GuidelinesConfiguration;
+                if (string.IsNullOrEmpty(config))
                 {
                     yield break;
                 }
@@ -276,18 +274,18 @@ namespace ColumnGuide
                     yield break;
                 }
 
-                int lastParen = config.IndexOf(')');
+                var lastParen = config.IndexOf(')');
                 if (lastParen <= 4)
                 {
                     yield break;
                 }
 
-                string[] columns = config.Substring(lastParen + 1).Split(',');
+                var columns = config.Substring(lastParen + 1).Split(',');
 
-                int columnCount = 0;
-                foreach (string columnText in columns)
+                var columnCount = 0;
+                foreach (var columnText in columns)
                 {
-                    int column = -1;
+                    var column = -1;
                     if (int.TryParse(columnText, out column) && column >= 0 /*Note: VS 2008 didn't allow zero, but we do, per user request*/ )
                     {
                         columnCount++;

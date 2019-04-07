@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.1" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" PrivateAssets="all" />
     <PackageReference Include="VSSDK.ComponentModelHost.11" Version="11.0.4" />
     <PackageReference Include="VSSDK.DTE.8" Version="8.0.4" />

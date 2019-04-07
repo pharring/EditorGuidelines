@@ -14,9 +14,9 @@ namespace ColumnGuide
 
         public GuidelineColorDefinition()
         {
-            this.DisplayName = "Guideline";
-            this.ForegroundCustomizable = false;
-            this.BackgroundColor = Colors.DarkRed;
+            DisplayName = "Guideline";
+            ForegroundCustomizable = false;
+            BackgroundColor = Colors.DarkRed;
         }
     }
 }

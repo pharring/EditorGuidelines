@@ -66,11 +66,13 @@ namespace ColumnGuide
 
         private static string Anonymize(string str)
         {
+#pragma warning disable CA5350 // Do Not Use Weak Cryptographic Algorithms
             using (var sha1 = SHA1.Create())
+#pragma warning restore CA5350 // Do Not Use Weak Cryptographic Algorithms
             {
-                byte[] inputBytes = System.Text.Encoding.Unicode.GetBytes(str);
-                byte[] hash = sha1.ComputeHash(inputBytes);
-                string base64 = Convert.ToBase64String(hash, 0, 6);
+                var inputBytes = System.Text.Encoding.Unicode.GetBytes(str);
+                var hash = sha1.ComputeHash(inputBytes);
+                var base64 = Convert.ToBase64String(hash, 0, 6);
                 return base64;
             }
         }
