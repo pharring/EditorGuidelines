@@ -21,8 +21,8 @@ namespace ColumnGuide
     /// </summary>
     class ColumnGuide : IDisposable
     {
-        private const double _lineThickness = 1.0;
-        private static bool _sentEditorConfigTelemetry;
+        private const double c_lineThickness = 1.0;
+        private static bool s_sentEditorConfigTelemetry;
 
         private IList<Line> _guidelines;
         private readonly IWpfTextView _view;
@@ -170,7 +170,7 @@ namespace ColumnGuide
                 {
                     DataContext = column,
                     Stroke = lineBrush,
-                    StrokeThickness = _lineThickness,
+                    StrokeThickness = c_lineThickness,
                     StrokeDashArray = dashArray
                 };
 
@@ -244,13 +244,13 @@ namespace ColumnGuide
 
                 var positions = ParseGuidelinePositionsFromCodingConvention(convention);
 
-                if (!_sentEditorConfigTelemetry)
+                if (!s_sentEditorConfigTelemetry)
                 {
                     var eventTelemetry = new EventTelemetry("EditorConfig");
                     eventTelemetry.Properties.Add("Convention", convention);
                     ColumnGuideAdornmentFactory.AddBrushColorAndGuidelinePositionsToTelemetry(eventTelemetry, _guidelineBrush.Brush, positions);
                     _telemetry.Client.TrackEvent(eventTelemetry);
-                    _sentEditorConfigTelemetry = true;
+                    s_sentEditorConfigTelemetry = true;
                 }
 
                 // TODO: await JoinableTaskFactory.SwitchToMainThreadAsync();

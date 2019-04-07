@@ -8,28 +8,21 @@ using Microsoft.VisualStudio.Shell.Interop;
 namespace ColumnGuide
 {
     [Export]
-    sealed class HostServices
+    internal sealed class HostServices
     {
         [Import(typeof(SVsServiceProvider))]
-        IServiceProvider ServiceProvider
+        private IServiceProvider ServiceProvider
         {
             get;
             set;
         }
 
         public T GetService<T>(Type serviceType) where T : class
-        {
-            return ServiceProvider.GetService(serviceType) as T;
-        }
+            => ServiceProvider.GetService(serviceType) as T;
 
         // Add services here
 
         public IVsSettingsManager SettingsManagerService
-        {
-            get
-            {
-                return GetService<IVsSettingsManager>(typeof(SVsSettingsManager));
-            }
-        }
+            => GetService<IVsSettingsManager>(typeof(SVsSettingsManager));
     }
 }

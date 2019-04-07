@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ColumnGuide
 {
-    interface ITextEditorGuidesSettings
+    internal interface ITextEditorGuidesSettings
     {
         IEnumerable<int> GuideLinePositionsInChars { get; }
     }

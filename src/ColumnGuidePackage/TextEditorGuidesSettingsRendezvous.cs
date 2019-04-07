@@ -8,19 +8,13 @@ namespace Microsoft.ColumnGuidePackage
 {
     static class TextEditorGuidesSettingsRendezvous
     {
-        private static ITextEditorGuidesSettingsChanger _instance;
-        public static ITextEditorGuidesSettingsChanger Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
-                    _instance = componentModel.GetService<ITextEditorGuidesSettingsChanger>();
-                }
+        private static ITextEditorGuidesSettingsChanger s_instance;
+        public static ITextEditorGuidesSettingsChanger Instance => s_instance ?? (s_instance = GetGlobalInstance());
 
-                return _instance;
-            }
+        private static ITextEditorGuidesSettingsChanger GetGlobalInstance()
+        {
+            var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
+            return componentModel.GetService<ITextEditorGuidesSettingsChanger>();
         }
     }
 }
