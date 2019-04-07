@@ -237,17 +237,34 @@ namespace ColumnGuide
 
         private Task UpdateGuidelinesFromCodingConventionAsync(ICodingConventionContext codingConventionContext, CancellationToken cancellationToken)
         {
-            if (!cancellationToken.IsCancellationRequested && codingConventionContext.CurrentConventions.TryGetConventionValue("guidelines", out string convention))
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Task.FromCanceled(cancellationToken);
+            }
+
+            ICollection<int> positions = null;
+
+            if (codingConventionContext.CurrentConventions.TryGetConventionValue("guidelines", out string guidelines))
+            {
+                positions = ParseGuidelinePositionsFromCodingConvention(guidelines);
+            }
+
+            // Also support max_line_length: https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#max_line_length
+            if (codingConventionContext.CurrentConventions.TryGetConventionValue("max_line_length", out string max_line_length) && TryParsePosition(max_line_length, out int maxLineLengthValue))
+            {
+                (positions ?? (positions = new List<int>())).Add(maxLineLengthValue);
+            }
+
+            if (positions != null)
             {
                 // Override 'classic' settings.
                 _isUsingCodingConvention = true;
 
-                var positions = ParseGuidelinePositionsFromCodingConvention(convention);
-
                 if (!s_sentEditorConfigTelemetry)
                 {
                     var eventTelemetry = new EventTelemetry("EditorConfig");
-                    eventTelemetry.Properties.Add("Convention", convention);
+                    eventTelemetry.Properties.Add("Convention", guidelines);
+                    eventTelemetry.Properties.Add(nameof(max_line_length), max_line_length);
                     ColumnGuideAdornmentFactory.AddBrushColorAndGuidelinePositionsToTelemetry(eventTelemetry, _guidelineBrush.Brush, positions);
                     _telemetry.Client.TrackEvent(eventTelemetry);
                     s_sentEditorConfigTelemetry = true;
@@ -257,16 +274,16 @@ namespace ColumnGuide
                 _view.VisualElement.Dispatcher.BeginInvoke(new Action<IEnumerable<int>>(PositionsChanged), positions);
             }
 
-            return Task.FromResult(false);
+            return Task.CompletedTask;
         }
 
-        private static List<int> ParseGuidelinePositionsFromCodingConvention(string codingConvention)
+        private static HashSet<int> ParseGuidelinePositionsFromCodingConvention(string codingConvention)
         {
             var positionsAsString = codingConvention.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            var result = new List<int>(positionsAsString.Length);
+            var result = new HashSet<int>();
             foreach (var position in positionsAsString)
             {
-                if (int.TryParse(position, out var column) && column >= 0 && column < 10000 && !result.Contains(column))
+                if (TryParsePosition(position, out int column))
                 {
                     result.Add(column);
                 }
@@ -274,6 +291,9 @@ namespace ColumnGuide
 
             return result;
         }
+
+        private static bool TryParsePosition(string text, out int column)
+            => int.TryParse(text, out column) && column >= 0 && column < 10000;
 
         private bool HavePositionsChanged(IEnumerable<int> newPositions)
         {
