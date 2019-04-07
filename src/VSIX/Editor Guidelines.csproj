@@ -17,6 +17,7 @@
 
     <AssemblyTitle>Editor Guidelines UI Package</AssemblyTitle>
     <Description>Adds commands for the Editor Guidelines extension</Description>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
 
   <PropertyGroup>
