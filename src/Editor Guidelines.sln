@@ -1,13 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.25901.2
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColumnGuide", "ColumnGuide\ColumnGuide.csproj", "{0C5B092D-506C-4F92-9902-205874908ACC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColumnGuide", "ColumnGuide\ColumnGuide.csproj", "{0C5B092D-506C-4F92-9902-205874908ACC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColumnGuidePackage", "ColumnGuidePackage\ColumnGuidePackage.csproj", "{B2BA96C9-1020-4D3E-9E4F-9D2525FD4DC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColumnGuidePackage", "ColumnGuidePackage\ColumnGuidePackage.csproj", "{B2BA96C9-1020-4D3E-9E4F-9D2525FD4DC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor Guidelines", "VSIX\Editor Guidelines.csproj", "{BD32086D-4DD4-43E4-B1DF-69DA079DA88C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Editor Guidelines", "VSIX\Editor Guidelines.csproj", "{BD32086D-4DD4-43E4-B1DF-69DA079DA88C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AFD82285-D26D-4361-AEC9-74A1D04AD45D}"
+	ProjectSection(SolutionItems) = preProject
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		global.json = global.json
+		..\NuGet.Config = ..\NuGet.Config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
