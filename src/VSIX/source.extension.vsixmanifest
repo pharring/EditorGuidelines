@@ -8,7 +8,7 @@
         <MoreInfo>https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines</MoreInfo>
         <License>LICENSE</License>
         <GettingStartedGuide>https://github.com/pharring/EditorGuidelines#getting-started</GettingStartedGuide>
-        <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
+        <ReleaseNotes>https://github.com/pharring/EditorGuidelines/blob/master/CHANGELOG.md</ReleaseNotes>
         <Icon>EditorGuidelines_128px.png</Icon>
         <Tags>Editor;Editing;Guidelines;Column</Tags>
     </Metadata>

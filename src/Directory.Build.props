@@ -3,8 +3,8 @@
 
   <PropertyGroup>
     <Company>Paul Harrington</Company>
-    <Copyright>Copyright © 2018 Paul Harrington</Copyright>
-    <Version>2.1.0</Version>
+    <Copyright>Copyright © 2019 Paul Harrington</Copyright>
+    <Version>2.2.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
