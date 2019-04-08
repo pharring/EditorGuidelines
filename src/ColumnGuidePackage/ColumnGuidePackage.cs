@@ -95,8 +95,8 @@ namespace Microsoft.ColumnGuidePackage
             return "Unknown";
         }
 
-        OleMenuCommand _addGuidelineCommand;
-        OleMenuCommand _removeGuidelineCommand;
+        private OleMenuCommand _addGuidelineCommand;
+        private OleMenuCommand _removeGuidelineCommand;
 
         private void AddColumnGuideBeforeQueryStatus(object sender, EventArgs e)
         {
@@ -176,12 +176,7 @@ namespace Microsoft.ColumnGuidePackage
             var selection = GetService(typeof(IVsMonitorSelection)) as IVsMonitorSelection;
             ErrorHandler.ThrowOnFailure(selection.GetCurrentElementValue((uint)VSConstants.VSSELELEMID.SEID_DocumentFrame, out var frameObj));
 
-            if (!(frameObj is IVsWindowFrame frame))
-            {
-                return null;
-            }
-
-            return GetActiveView(frame);
+            return frameObj is IVsWindowFrame frame ? GetActiveView(frame) : null;
         }
 
         private static IVsTextView GetActiveView(IVsWindowFrame windowFrame)
@@ -240,7 +235,7 @@ namespace Microsoft.ColumnGuidePackage
             // This is the code the editor uses to populate the status bar. Thanks, Jack!
             var caretViewLine = textView.Caret.ContainingTextViewLine;
             var columnWidth = textView.FormattedLineSource.ColumnWidth;
-            return (int)(Math.Round((textView.Caret.Left - caretViewLine.Left) / columnWidth));
+            return (int)Math.Round((textView.Caret.Left - caretViewLine.Left) / columnWidth);
         }
 
         private int GetCurrentEditorColumn()

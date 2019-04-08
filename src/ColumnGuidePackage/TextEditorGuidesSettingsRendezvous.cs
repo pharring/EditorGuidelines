@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Shell;
 
 namespace Microsoft.ColumnGuidePackage
 {
-    static class TextEditorGuidesSettingsRendezvous
+    internal static class TextEditorGuidesSettingsRendezvous
     {
         private static ITextEditorGuidesSettingsChanger s_instance;
         public static ITextEditorGuidesSettingsChanger Instance => s_instance ?? (s_instance = GetGlobalInstance());
