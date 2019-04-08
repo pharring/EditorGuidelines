@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\..\images\EditorGuidelines_128px.png">
+    <Content Include="..\..\marketplace\images\EditorGuidelines_128px.png">
       <Link>EditorGuidelines_128px.png</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

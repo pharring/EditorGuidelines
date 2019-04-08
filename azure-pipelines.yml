@@ -33,3 +33,20 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+    contents: '**/bin/$(BuildConfiguration)/**/?(*.exe|*.dll|*.pdb|*.vsix)'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+    contents: 'marketplace/**'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: drop
