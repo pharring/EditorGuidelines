@@ -131,30 +131,13 @@ namespace ColumnGuide
         }
 
         public bool CanAddGuideline(int column)
-        {
-            if (!IsValidColumn(column))
-            {
-                return false;
-            }
-
-            if (GetCountOfGuidelines() >= c_maxGuides)
-            {
-                return false;
-            }
-
-            return !IsGuidelinePresent(column);
-        }
+            => IsValidColumn(column)
+            && GetCountOfGuidelines() < c_maxGuides
+            && !IsGuidelinePresent(column);
 
         public bool CanRemoveGuideline(int column)
-        {
-            if (!IsValidColumn(column))
-            {
-                return false;
-            }
-
-            return IsGuidelinePresent(column)
-                || HasExactlyOneGuideline(); // Allow user to remove the last guideline regardless of the column
-        }
+            => IsValidColumn(column)
+            && (IsGuidelinePresent(column) || HasExactlyOneGuideline()); // Allow user to remove the last guideline regardless of the column
 
         public void RemoveAllGuidelines()
             => WriteSettings(GuidelinesColor, Array.Empty<int>());

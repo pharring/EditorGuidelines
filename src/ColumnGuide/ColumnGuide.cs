@@ -19,7 +19,7 @@ namespace ColumnGuide
     /// <summary>
     /// Adornment class that draws vertical guide lines beneath the text
     /// </summary>
-    class ColumnGuide : IDisposable
+    internal class ColumnGuide : IDisposable
     {
         private const double c_lineThickness = 1.0;
         private static bool s_sentEditorConfigTelemetry;
@@ -78,7 +78,7 @@ namespace ColumnGuide
             }
         }
 
-        void ViewClosed(object sender, EventArgs e)
+        private void ViewClosed(object sender, EventArgs e)
         {
             if (_codingConventionsCancellationTokenSource != default(CancellationTokenSource))
             {
@@ -180,16 +180,16 @@ namespace ColumnGuide
             return result;
         }
 
-        void UpdatePosition(Line line)
+        private void UpdatePosition(Line line)
         {
             var column = (int)line.DataContext;
 
-            line.X1 = line.X2 = _baseIndentation + 0.5 + column * _columnWidth;
+            line.X1 = line.X2 = _baseIndentation + 0.5 + (column * _columnWidth);
             line.Y1 = _view.ViewportTop;
             line.Y2 = _view.ViewportBottom;
         }
 
-        void UpdatePositions()
+        private void UpdatePositions()
         {
             foreach (var line in _guidelines)
             {
@@ -197,7 +197,7 @@ namespace ColumnGuide
             }
         }
 
-        void AddGuidelinesToAdornmentLayer()
+        private void AddGuidelinesToAdornmentLayer()
         {
             //Grab a reference to the adornment layer that this adornment should be added to
             var adornmentLayer = _view.GetAdornmentLayer("ColumnGuide");

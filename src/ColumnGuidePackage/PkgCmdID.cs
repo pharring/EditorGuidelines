@@ -2,7 +2,7 @@
 
 namespace Microsoft.ColumnGuidePackage
 {
-    enum PkgCmdIDList
+    internal enum PkgCmdIDList
     {
         cmdidAddColumnGuideline = 0x100,
         cmdidRemoveColumnGuideline = 0x101,

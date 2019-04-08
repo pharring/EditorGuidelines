@@ -14,7 +14,9 @@ namespace ColumnGuide
         private readonly IEditorFormatMap _formatMap;
 
         [ImportingConstructor]
+#pragma warning disable IDE0051 // Remove unused private members
         private GuidelineBrush(IEditorFormatMapService editorFormatMapService)
+#pragma warning restore IDE0051 // Remove unused private members
         {
             _formatMap = editorFormatMapService.GetEditorFormatMap("text");
             _formatMap.FormatMappingChanged += OnFormatMappingChanged;
@@ -36,12 +38,9 @@ namespace ColumnGuide
         private Brush GetGuidelineBrushFromFontsAndColors()
         {
             var resourceDictionary = _formatMap.GetProperties(GuidelineColorDefinition.c_name);
-            if (resourceDictionary.Contains(EditorFormatDefinition.BackgroundBrushId))
-            {
-                return resourceDictionary[EditorFormatDefinition.BackgroundBrushId] as Brush;
-            }
-
-            return null;
+            return resourceDictionary.Contains(EditorFormatDefinition.BackgroundBrushId)
+                ? resourceDictionary[EditorFormatDefinition.BackgroundBrushId] as Brush
+                : null;
         }
     }
 }
