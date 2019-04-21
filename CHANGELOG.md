@@ -1,6 +1,10 @@
 # Editor Guidelines
 All notable changes will be documented in this file.
 
+## Version [2.2.2] (April 21st 2019)
+### Added
+- Style and color may be set via guidelines_style setting in .editorconfig
+
 ## Version [2.2.1] (April 7th 2019)
 ### Added
 - CD release to Marketplace from Azure Dev Ops
@@ -64,6 +68,7 @@ All notable changes will be documented in this file.
 ### Changed
 - Updated description to indicate that VS 2015 is supported.
 
+[2.2.2]: https://github.com/pharring/EditorGuidelines/compare/2.2.1..2.2.2
 [2.2.1]: https://github.com/pharring/EditorGuidelines/compare/2.2.0..2.2.1
 [2.2.0]: https://github.com/pharring/EditorGuidelines/compare/2.1.0..2.2.0
 [2.1.0]: https://github.com/pharring/EditorGuidelines/compare/2.0.4..2.1.0
