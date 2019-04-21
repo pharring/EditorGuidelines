@@ -41,6 +41,21 @@ guidelines = 80
 guidelines = 80, 120
 ```
 
+You can also set the guideline style like this:
+```.txt
+[*]
+guidelines_style = 1px dotted black
+
+[*.{cs,vb}]
+guidelines_style = 2px solid 40ff0000 # Red with 25% opacity
+```
+As shown, you can have different styles for different file types. There are three different drawing styles:
+- solid
+- dotted
+- dashed
+
+As the examples show, colors may be named or in RGB or ARGB (hexadecimal) format. The available color names are from WPF's Colors collection.
+
 To learn more about .editorconfig see https://aka.ms/editorconfigdocs
 
 **Note:** When guidelines are set via .editorconfig they override any other guidelines set via the context menus or command window.
