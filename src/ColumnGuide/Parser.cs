@@ -12,7 +12,11 @@ namespace ColumnGuide
     /// </summary>
     internal static class Parser
     {
-        private static readonly char[] s_separators = new[] { ',', ';', ':', ' ' };
+        /// <summary>
+        /// Note: Semicolon is not a valid separator because it's treated as a comment in .editorconfig
+        /// </summary>
+        private static readonly char[] s_separators = new[] { ',', ':', ' ' };
+
         public static HashSet<int> ParseGuidelinePositionsFromCodingConvention(string codingConvention)
         {
             var result = new HashSet<int>();
