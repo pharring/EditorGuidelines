@@ -8,11 +8,6 @@ namespace ColumnGuide
     internal enum LineStyle
     {
         /// <summary>
-        /// A solid line.
-        /// </summary>
-        Solid,
-
-        /// <summary>
         /// A 1:3 dotted line
         /// </summary>
         Dotted,
@@ -20,6 +15,11 @@ namespace ColumnGuide
         /// <summary>
         /// A 3:1 dashed line
         /// </summary>
-        Dashed
+        Dashed,
+
+        /// <summary>
+        /// A solid line.
+        /// </summary>
+        Solid
     }
 }

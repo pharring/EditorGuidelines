@@ -15,9 +15,9 @@ namespace ColumnGuide
         /// </summary>
         private const double c_defaultThickness = 1.0;
 
-        private static readonly DoubleCollection s_solidDashArray = new DoubleCollection();
         private static readonly DoubleCollection s_dottedDashArray = new DoubleCollection(new[] { 1.0, 3.0 });
         private static readonly DoubleCollection s_dashedDashArray = new DoubleCollection(new[] { 3.0, 1.0 });
+        private static readonly DoubleCollection s_solidDashArray = new DoubleCollection();
 
         /// <summary>
         /// Create an instance from the given brush.
@@ -50,14 +50,14 @@ namespace ColumnGuide
             {
                 switch (LineStyle)
                 {
-                    case LineStyle.Solid:
-                        return s_solidDashArray;
-
                     case LineStyle.Dotted:
                         return s_dottedDashArray;
 
                     case LineStyle.Dashed:
                         return s_dashedDashArray;
+
+                    case LineStyle.Solid:
+                        return s_solidDashArray;
 
                     default:
                         throw new IndexOutOfRangeException();
@@ -78,7 +78,8 @@ namespace ColumnGuide
         /// <summary>
         /// Extract the brush's color.
         /// </summary>
-        private Color BrushColor => (Brush is SolidColorBrush solidColorBrush) ? solidColorBrush.Color : Colors.Black;
+        /// <remarks>Internal for testing.</remarks>
+        internal Color BrushColor => (Brush is SolidColorBrush solidColorBrush) ? solidColorBrush.Color : default;
 
         public bool Equals(StrokeParameters other) => BrushColor == other.BrushColor && StrokeThickness == other.StrokeThickness && LineStyle == other.LineStyle;
 

@@ -7,10 +7,11 @@
 indent_style = space 
 # Code files 
 [*.{cs,csx,vb,vbx}] 
+guidelines = 132
+guidelines_style = 2px dashed 40C00020
 indent_size = 4 
 insert_final_newline = true 
 charset = utf-8-bom 
-max_line_length = 132
 ############################### 
 # .NET Coding Conventions     # 
 ############################### 

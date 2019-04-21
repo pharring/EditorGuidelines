@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{A5C7FD
 		..\marketplace\images\FontsAndColors.png = ..\marketplace\images\FontsAndColors.png
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColumnGuideTests", "..\test\ColumnGuideTests\ColumnGuideTests.csproj", "{38832BD0-0B36-410A-914D-2E5BA06EBA6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{BD32086D-4DD4-43E4-B1DF-69DA079DA88C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD32086D-4DD4-43E4-B1DF-69DA079DA88C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD32086D-4DD4-43E4-B1DF-69DA079DA88C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38832BD0-0B36-410A-914D-2E5BA06EBA6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38832BD0-0B36-410A-914D-2E5BA06EBA6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38832BD0-0B36-410A-914D-2E5BA06EBA6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38832BD0-0B36-410A-914D-2E5BA06EBA6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
