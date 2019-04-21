@@ -4,7 +4,6 @@ using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.VisualStudio.CodingConventions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Text.Formatting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using static ColumnGuide.Parser;
 
 namespace ColumnGuide
 {
@@ -21,7 +21,6 @@ namespace ColumnGuide
     /// </summary>
     internal class ColumnGuide : IDisposable
     {
-        private const double c_lineThickness = 1.0;
         private static bool s_sentEditorConfigTelemetry;
 
         private IList<Line> _guidelines;
@@ -31,7 +30,8 @@ namespace ColumnGuide
         private double _columnWidth;
         private INotifyPropertyChanged _settingsChanged;
         private readonly ITelemetry _telemetry;
-        private GuidelineBrush _guidelineBrush;
+        private GuidelineBrush _guidelineBrush; // The brush supplied by fonts and colors
+        private StrokeParameters _strokeParameters;
         private readonly CancellationTokenSource _codingConventionsCancellationTokenSource;
         private bool _isUsingCodingConvention;
 
@@ -48,6 +48,7 @@ namespace ColumnGuide
             _telemetry = telemetry;
             _guidelineBrush = guidelineBrush;
             _guidelineBrush.BrushChanged += GuidelineBrushChanged;
+            _strokeParameters = StrokeParameters.FromBrush(_guidelineBrush.Brush);
 
             if (codingConventionsManager != null && view.TextBuffer.Properties.TryGetProperty<ITextDocument>(typeof(ITextDocument), out var textDocument))
             {
@@ -69,6 +70,7 @@ namespace ColumnGuide
 
         private void GuidelineBrushChanged(object sender, Brush brush)
         {
+            _strokeParameters.Brush = brush;
             if (_guidelines != null)
             {
                 foreach (var guideline in _guidelines)
@@ -121,6 +123,15 @@ namespace ColumnGuide
             }
         }
 
+        private void StrokeParametersChanged(StrokeParameters strokeParameters)
+        {
+            if (!_strokeParameters.Equals(strokeParameters))
+            {
+                _strokeParameters = strokeParameters;
+                UpdateLineStrokes();
+            }
+        }
+
         private void OnViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
             var fUpdatePositions = false;
@@ -131,7 +142,7 @@ namespace ColumnGuide
                 return;
             }
 
-            if(_columnWidth != lineSource.ColumnWidth )
+            if (_columnWidth != lineSource.ColumnWidth)
             {
                 _columnWidth = lineSource.ColumnWidth;
                 fUpdatePositions = true;
@@ -158,28 +169,41 @@ namespace ColumnGuide
             }
         }
 
+        /// <summary>
+        /// Create a single vertical column guide with the current stroke parameters for
+        /// the given column in the current viewport.
+        /// </summary>
+        /// <param name="column">The columnar position of the new guideline.</param>
+        /// <returns>The new vertical column guide.</returns>
+        private Line CreateLine(int column)
+        {
+            var line = new Line { DataContext = column };
+            AddStrokeParameters(line);
+            return line;
+        }
+
+        /// <summary>
+        /// Create all the guidelines for the given positions.
+        /// </summary>
+        /// <param name="guidelinePositions">The columnar positions of the new guidelines.</param>
+        /// <returns>The list of created lines.</returns>
         private IList<Line> CreateGuidelines(IEnumerable<int> guidelinePositions)
         {
-            var lineBrush = _guidelineBrush.Brush;
-            var dashArray = new DoubleCollection(new double[] { 1.0, 3.0 });
             var result = new List<Line>();
 
             foreach (var column in guidelinePositions)
             {
-                var line = new Line()
-                {
-                    DataContext = column,
-                    Stroke = lineBrush,
-                    StrokeThickness = c_lineThickness,
-                    StrokeDashArray = dashArray
-                };
-
+                var line = CreateLine(column);
                 result.Add(line);
             }
 
             return result;
         }
 
+        /// <summary>
+        /// Update the rendering position of the given line to the current viewport.
+        /// </summary>
+        /// <param name="line">The line to update.</param>
         private void UpdatePosition(Line line)
         {
             var column = (int)line.DataContext;
@@ -189,11 +213,40 @@ namespace ColumnGuide
             line.Y2 = _view.ViewportBottom;
         }
 
+        /// <summary>
+        /// Update all line positions when the viewport changes.
+        /// </summary>
         private void UpdatePositions()
         {
             foreach (var line in _guidelines)
             {
                 UpdatePosition(line);
+            }
+        }
+
+        /// <summary>
+        /// Update the given line with the current stroke parameters.
+        /// </summary>
+        /// <param name="line">The line to update.</param>
+        private void AddStrokeParameters(Line line)
+        {
+            line.Stroke = _strokeParameters.Brush;
+            line.StrokeThickness = _strokeParameters.StrokeThickness;
+            line.StrokeDashArray = _strokeParameters.StrokeDashArray;
+            line.Stroke = _strokeParameters.Brush;
+        }
+
+        /// <summary>
+        /// Update all guidelines with the current stroke parameters.
+        /// </summary>
+        private void UpdateLineStrokes()
+        {
+            if (_guidelines != null)
+            {
+                foreach (var line in _guidelines)
+                {
+                    AddStrokeParameters(line);
+                }
             }
         }
 
@@ -242,6 +295,15 @@ namespace ColumnGuide
                 return Task.FromCanceled(cancellationToken);
             }
 
+            if (codingConventionContext.CurrentConventions.TryGetConventionValue("guidelines_style", out string guidelines_style))
+            {
+                if (TryParseStrokeParametersFromCodingConvention(guidelines_style, out var strokeParameters))
+                {
+                    _isUsingCodingConvention = true;
+                    _view.VisualElement.Dispatcher.BeginInvoke(new Action<StrokeParameters>(StrokeParametersChanged), strokeParameters.Freeze());
+                }
+            }
+
             ICollection<int> positions = null;
 
             if (codingConventionContext.CurrentConventions.TryGetConventionValue("guidelines", out string guidelines))
@@ -260,40 +322,35 @@ namespace ColumnGuide
                 // Override 'classic' settings.
                 _isUsingCodingConvention = true;
 
-                if (!s_sentEditorConfigTelemetry)
-                {
-                    var eventTelemetry = new EventTelemetry("EditorConfig");
-                    eventTelemetry.Properties.Add("Convention", guidelines);
-                    eventTelemetry.Properties.Add(nameof(max_line_length), max_line_length);
-                    ColumnGuideAdornmentFactory.AddBrushColorAndGuidelinePositionsToTelemetry(eventTelemetry, _guidelineBrush.Brush, positions);
-                    _telemetry.Client.TrackEvent(eventTelemetry);
-                    s_sentEditorConfigTelemetry = true;
-                }
-
                 // TODO: await JoinableTaskFactory.SwitchToMainThreadAsync();
                 _view.VisualElement.Dispatcher.BeginInvoke(new Action<IEnumerable<int>>(PositionsChanged), positions);
             }
 
-            return Task.CompletedTask;
-        }
-
-        private static HashSet<int> ParseGuidelinePositionsFromCodingConvention(string codingConvention)
-        {
-            var positionsAsString = codingConvention.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            var result = new HashSet<int>();
-            foreach (var position in positionsAsString)
+            if (_isUsingCodingConvention && !s_sentEditorConfigTelemetry)
             {
-                if (TryParsePosition(position, out int column))
+                var eventTelemetry = new EventTelemetry("EditorConfig");
+                if (!string.IsNullOrEmpty(guidelines))
                 {
-                    result.Add(column);
+                    eventTelemetry.Properties.Add("Convention", guidelines);
                 }
+
+                if (!string.IsNullOrEmpty(max_line_length))
+                {
+                    eventTelemetry.Properties.Add(nameof(max_line_length), max_line_length);
+                }
+
+                if (!string.IsNullOrEmpty(guidelines_style))
+                {
+                    eventTelemetry.Properties.Add(nameof(guidelines_style), guidelines_style);
+                }
+
+                ColumnGuideAdornmentFactory.AddStrokeParametersAndPositionsToTelemetry(eventTelemetry, _strokeParameters, positions);
+                _telemetry.Client.TrackEvent(eventTelemetry);
+                s_sentEditorConfigTelemetry = true;
             }
 
-            return result;
+            return Task.CompletedTask;
         }
-
-        private static bool TryParsePosition(string text, out int column)
-            => int.TryParse(text, out column) && column >= 0 && column < 10000;
 
         private bool HavePositionsChanged(IEnumerable<int> newPositions)
         {
