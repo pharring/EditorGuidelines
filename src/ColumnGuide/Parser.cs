@@ -123,34 +123,33 @@ namespace ColumnGuide
             }
 
             // Skip leading whitespace
-            int idx;
-            for (idx = start; idx < text.Length; idx++)
+            int i;
+            for (i = start; i < text.Length; i++)
             {
-                if (!char.IsWhiteSpace(text[idx]))
+                if (!char.IsWhiteSpace(text[i]))
                 {
                     break;
                 }
             }
 
-            if (idx == text.Length)
+            if (i == text.Length)
             {
                 // No more tokens
                 tokenLength = 0;
                 return -1;
             }
 
-            start = idx;
+            start = i;
 
-            for (; idx < text.Length; idx++)
+            for (; i < text.Length; i++)
             {
-                var ch = text[idx];
-                if (char.IsPunctuation(ch) || char.IsWhiteSpace(ch))
+                if (char.IsWhiteSpace(text[i]))
                 {
                     break;
                 }
             }
 
-            tokenLength = idx - start;
+            tokenLength = i - start;
             return start;
         }
 
