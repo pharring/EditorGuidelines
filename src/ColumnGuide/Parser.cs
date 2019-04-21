@@ -12,9 +12,10 @@ namespace ColumnGuide
     /// </summary>
     internal static class Parser
     {
+        private static readonly char[] s_separators = new[] { ',', ';', ':', ' ' };
         public static HashSet<int> ParseGuidelinePositionsFromCodingConvention(string codingConvention)
         {
-            var positionsAsString = codingConvention.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var positionsAsString = codingConvention.Split(s_separators, StringSplitOptions.RemoveEmptyEntries);
             var result = new HashSet<int>();
             foreach (var position in positionsAsString)
             {
@@ -49,20 +50,19 @@ namespace ColumnGuide
                 return false;
             }
 
+            var tokens = text.Split(s_separators, StringSplitOptions.RemoveEmptyEntries);
+            if (tokens.Length < 1)
+            {
+                return false;
+            }
+
             // Pixel width (stroke thickness)
-            int tokenStart = GetNextToken(text, start: 0, out var tokenLength);
-            if (tokenStart < 0)
+            if (!tokens[0].EndsWith("px", StringComparison.Ordinal))
             {
                 return false;
             }
 
-            var token = text.Substring(tokenStart, tokenLength);
-            if (!token.EndsWith("px", StringComparison.Ordinal))
-            {
-                return false;
-            }
-
-            if (!double.TryParse(token.Substring(0, tokenLength - 2), out var strokeThickness))
+            if (!double.TryParse(tokens[0].Substring(0, tokens[0].Length - 2), out var strokeThickness))
             {
                 return false;
             }
@@ -78,79 +78,30 @@ namespace ColumnGuide
                 StrokeThickness = strokeThickness
             };
 
-            // Line style
-            tokenStart = GetNextToken(text, tokenStart + tokenLength, out tokenLength);
-            if (tokenStart < 0)
+            if (tokens.Length < 2)
             {
                 return true;
             }
 
-            token = text.Substring(tokenStart, tokenLength);
-            if (Enum.TryParse<LineStyle>(token, ignoreCase: true, out var lineStyle))
+            // Line style
+            if (Enum.TryParse<LineStyle>(tokens[1], ignoreCase: true, out var lineStyle))
             {
                 strokeParameters.LineStyle = lineStyle;
             }
 
-            // Color
-            tokenStart = GetNextToken(text, tokenStart + tokenLength, out tokenLength);
-            if (tokenStart < 0)
+            if (tokens.Length < 3)
             {
                 return true;
             }
 
-            token = text.Substring(tokenStart, tokenLength);
-            if (TryParseColor(token, out var color))
+            // Color
+            if (TryParseColor(tokens[2], out var color))
             {
                 strokeParameters.Brush = new SolidColorBrush(color);
             }
 
+            // Ignore trailing tokens.
             return true;
-        }
-
-        /// <summary>
-        /// Extract the next token from a string of whitespace-separated tokens.
-        /// </summary>
-        /// <param name="text">The complete text.</param>
-        /// <param name="start">The starting index.</param>
-        /// <param name="tokenLength">The length of the token found.</param>
-        /// <returns>The starting index of the next token.</returns>
-        private static int GetNextToken(string text, int start, out int tokenLength)
-        {
-            // Find the next token separated by whitespace or punctuation
-            if (start < 0 || start > text.Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(start));
-            }
-
-            // Skip leading whitespace
-            int i;
-            for (i = start; i < text.Length; i++)
-            {
-                if (!char.IsWhiteSpace(text[i]))
-                {
-                    break;
-                }
-            }
-
-            if (i == text.Length)
-            {
-                // No more tokens
-                tokenLength = 0;
-                return -1;
-            }
-
-            start = i;
-
-            for (; i < text.Length; i++)
-            {
-                if (char.IsWhiteSpace(text[i]))
-                {
-                    break;
-                }
-            }
-
-            tokenLength = i - start;
-            return start;
         }
 
         private static bool IsInRange(char ch, char low, char high)
