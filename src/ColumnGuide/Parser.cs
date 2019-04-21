@@ -15,9 +15,8 @@ namespace ColumnGuide
         private static readonly char[] s_separators = new[] { ',', ';', ':', ' ' };
         public static HashSet<int> ParseGuidelinePositionsFromCodingConvention(string codingConvention)
         {
-            var positionsAsString = codingConvention.Split(s_separators, StringSplitOptions.RemoveEmptyEntries);
             var result = new HashSet<int>();
-            foreach (var position in positionsAsString)
+            foreach (var position in GetTokens(codingConvention, s_separators))
             {
                 if (TryParsePosition(position, out int column))
                 {
@@ -40,29 +39,26 @@ namespace ColumnGuide
         /// dotted specifies the line style.Simple to support: solid, dotted and dashed
         /// </summary>
         /// <param name="text">The value read from guidelines_style editorconfig.</param>
-        /// <returns>New stroke parameters. Null if we couldn't parse it.</returns>
+        /// <param name="strokeParameters">The parsed stroke parameters.</param>
+        /// <returns>True if parameters were parsed. False otherwise.</returns>
         public static bool TryParseStrokeParametersFromCodingConvention(string text, out StrokeParameters strokeParameters)
         {
             strokeParameters = null;
 
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                return false;
-            }
-
-            var tokens = text.Split(s_separators, StringSplitOptions.RemoveEmptyEntries);
-            if (tokens.Length < 1)
+            var tokensEnumerator = GetTokens(text, s_separators).GetEnumerator();
+            if (!tokensEnumerator.MoveNext())
             {
                 return false;
             }
 
             // Pixel width (stroke thickness)
-            if (!tokens[0].EndsWith("px", StringComparison.Ordinal))
+            var token = tokensEnumerator.Current;
+            if (!token.EndsWith("px", StringComparison.Ordinal))
             {
                 return false;
             }
 
-            if (!double.TryParse(tokens[0].Substring(0, tokens[0].Length - 2), out var strokeThickness))
+            if (!double.TryParse(token.Substring(0, token.Length - 2), out var strokeThickness))
             {
                 return false;
             }
@@ -78,24 +74,26 @@ namespace ColumnGuide
                 StrokeThickness = strokeThickness
             };
 
-            if (tokens.Length < 2)
+            if (!tokensEnumerator.MoveNext())
             {
                 return true;
             }
 
             // Line style
-            if (Enum.TryParse<LineStyle>(tokens[1], ignoreCase: true, out var lineStyle))
+            token = tokensEnumerator.Current;
+            if (Enum.TryParse<LineStyle>(token, ignoreCase: true, out var lineStyle))
             {
                 strokeParameters.LineStyle = lineStyle;
             }
 
-            if (tokens.Length < 3)
+            if (!tokensEnumerator.MoveNext())
             {
                 return true;
             }
 
             // Color
-            if (TryParseColor(tokens[2], out var color))
+            token = tokensEnumerator.Current;
+            if (TryParseColor(token, out var color))
             {
                 strokeParameters.Brush = new SolidColorBrush(color);
             }
@@ -103,6 +101,57 @@ namespace ColumnGuide
             // Ignore trailing tokens.
             return true;
         }
+
+        private struct TokenEnumerator
+        {
+            private readonly string _text;
+            private readonly char[] _separators;
+            private int _iStart;
+
+            public TokenEnumerator(string text, char[] separators)
+            {
+                _text = text;
+                _separators = separators;
+                _iStart = 0;
+                Current = null;
+            }
+
+            public TokenEnumerator GetEnumerator() => this;
+
+            public bool MoveNext()
+            {
+                if (_text == null)
+                {
+                    return false;
+                }
+
+                // Equivalent of text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                while (_iStart < _text.Length)
+                {
+                    var iNextSeparator = _text.IndexOfAny(_separators, _iStart);
+                    if (iNextSeparator < 0)
+                    {
+                        iNextSeparator = _text.Length;
+                    }
+
+                    var tokenLength = iNextSeparator - _iStart;
+                    if (tokenLength > 0)
+                    {
+                        Current = _text.Substring(_iStart, tokenLength);
+                        _iStart = iNextSeparator + 1;
+                        return true;
+                    }
+
+                    _iStart = iNextSeparator + 1;
+                }
+
+                return false;
+            }
+
+            public string Current { get; private set; }
+        }
+
+        private static TokenEnumerator GetTokens(string text, char[] separators) => new TokenEnumerator(text, separators);
 
         private static bool IsInRange(char ch, char low, char high)
             => (uint)(ch - low) <= high - low;

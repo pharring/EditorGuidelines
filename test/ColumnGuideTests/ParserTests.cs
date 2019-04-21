@@ -14,7 +14,7 @@ namespace ColumnGuideTests
         [InlineData("0 1", 0, 1)]
         [InlineData("0,1", 0, 1)]
         [InlineData("0;1,2", 0, 1, 2)]
-        [InlineData("0 1,2    3", 0, 1, 2, 3)]
+        [InlineData("0 1,2    3;", 0, 1, 2, 3)]
         [InlineData("132:80, 40,50,60 4 8", 4, 8, 40, 50, 60, 80, 132)]
         [InlineData("80,80,80", 80)]
         [InlineData("-1, 99999, 80", 80)]
