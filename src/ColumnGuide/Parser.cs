@@ -78,6 +78,7 @@ namespace ColumnGuide
                 StrokeThickness = strokeThickness
             };
 
+            // Line style
             tokenStart = GetNextToken(text, tokenStart + tokenLength, out tokenLength);
             if (tokenStart < 0)
             {
@@ -85,13 +86,12 @@ namespace ColumnGuide
             }
 
             token = text.Substring(tokenStart, tokenLength);
-            if (!Enum.TryParse<LineStyle>(token, ignoreCase: true, out var lineStyle))
+            if (Enum.TryParse<LineStyle>(token, ignoreCase: true, out var lineStyle))
             {
-                return true;
+                strokeParameters.LineStyle = lineStyle;
             }
 
-            strokeParameters.LineStyle = lineStyle;
-
+            // Color
             tokenStart = GetNextToken(text, tokenStart + tokenLength, out tokenLength);
             if (tokenStart < 0)
             {
@@ -99,7 +99,7 @@ namespace ColumnGuide
             }
 
             token = text.Substring(tokenStart, tokenLength);
-            if (TryParseColor(token, out Color color))
+            if (TryParseColor(token, out var color))
             {
                 strokeParameters.Brush = new SolidColorBrush(color);
             }
