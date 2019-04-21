@@ -76,9 +76,23 @@ namespace ColumnGuide
         }
 
         internal static void AddBrushColorAndGuidelinePositionsToTelemetry(EventTelemetry eventTelemetry, Brush brush, IEnumerable<int> positions)
+            => AddStrokeParametersAndPositionsToTelemetry(eventTelemetry, StrokeParameters.FromBrush(brush), positions);
+
+        internal static void AddStrokeParametersAndPositionsToTelemetry(EventTelemetry eventTelemetry, StrokeParameters strokeParameters, IEnumerable<int> positions)
         {
             var telemetryProperties = eventTelemetry.Properties;
-            telemetryProperties.Add("Color", brush?.ToString(InvariantCulture) ?? "unknown");
+
+            if (strokeParameters.Brush != null)
+            {
+                telemetryProperties.Add("Color", strokeParameters.Brush.ToString(InvariantCulture) ?? "unknown");
+
+                if (strokeParameters.Brush.Opacity != 1.0)
+                {
+                    eventTelemetry.Metrics.Add("Opacity", strokeParameters.Brush.Opacity);
+                }
+            }
+
+            telemetryProperties.Add("Style", strokeParameters.LineStyle.ToString());
 
             var count = 0;
             foreach (var column in positions)
@@ -87,6 +101,7 @@ namespace ColumnGuide
                 count++;
             }
 
+            eventTelemetry.Metrics.Add("Thickness", strokeParameters.StrokeThickness);
             eventTelemetry.Metrics.Add("Count", count);
         }
 

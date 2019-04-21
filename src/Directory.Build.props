@@ -5,6 +5,7 @@
     <Company>Paul Harrington</Company>
     <Copyright>Copyright © 2019 Paul Harrington</Copyright>
     <Version>2.2.1</Version>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
