@@ -50,7 +50,7 @@ namespace ColumnGuide
             _guidelineBrush.BrushChanged += GuidelineBrushChanged;
             _strokeParameters = StrokeParameters.FromBrush(_guidelineBrush.Brush);
 
-            if (codingConventionsManager != null && view.TextBuffer.Properties.TryGetProperty<ITextDocument>(typeof(ITextDocument), out var textDocument))
+            if (codingConventionsManager != null && view.TryGetTextDocument(out var textDocument))
             {
                 _codingConventionsCancellationTokenSource = new CancellationTokenSource();
                 var fireAndForgetTask = LoadGuidelinesFromEditorConfigAsync(codingConventionsManager, textDocument.FilePath);
