@@ -35,7 +35,7 @@ You can change the guideline color from the Fonts and Colors page in `Tools|Opti
 For VS 2017 and VS 2019, the position of guidelines can be overridden via settings in .editorconfig files.
 Set the `guidelines` property to a list of column values. The following example sets guidelines at columns 80 and 120 for C# and VB files and a single guideline at column 80 for all other files.
 
-```.txt
+```ini
 # All files
 [*]
 guidelines = 80
@@ -46,19 +46,21 @@ guidelines = 80, 120
 ```
 
 You can also set the guideline style like this:
-```.txt
+```ini
 [*]
+# Named color format
 guidelines_style = 1px dotted black
 
 [*.{cs,vb}]
-guidelines_style = 2px solid 40ff0000 # Red with 25% opacity
+# ARGB color format (red with 25% opacity)
+guidelines_style = 2.5px solid 40ff0000
 ```
 As shown, you can have different styles for different file types. There are three different drawing styles:
 - solid
 - dotted
 - dashed
 
-As the examples show, colors may be named or in RGB or ARGB (hexadecimal) format. The available color names are from WPF's Colors collection.
+As the examples show, colors may be named or in RGB or ARGB (hexadecimal) format. The available color names are from WPF's Colors collection (System.Windows.Media.Colors).
 
 To learn more about .editorconfig see https://aka.ms/editorconfigdocs
 
