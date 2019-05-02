@@ -125,6 +125,8 @@ guidelines = 120
             await TestServices.Solution.OpenFileAsync(
                 projectName: Path.GetFileNameWithoutExtension(_testProjectFile),
                 relativeFilePath: Path.GetFileName(_testSourceFile));
+
+            // ➡ TODO: wait for guidelines to appear and assert they are at the correct position
         }
 
         /// <summary>
@@ -156,6 +158,8 @@ guidelines = 120
                     }
                 }
             }
+
+            // ➡ TODO: wait for guidelines to appear and assert they are at the correct position
         }
     }
 }
