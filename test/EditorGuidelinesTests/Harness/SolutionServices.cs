@@ -126,6 +126,14 @@ namespace EditorGuidelinesTests.Harness
             ErrorHandler.ThrowOnFailure(textManager.NavigateToLineAndColumn(textLines, VSConstants.LOGVIEWID.Code_guid, line, column, line, column));
         }
 
+        public async Task<bool> IsDocumentOpenAsync(string projectName, string relativeFilePath, Guid logicalView)
+        {
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            var filePath = GetAbsolutePathForProjectRelativeFilePath(projectName, relativeFilePath);
+            return IsDocumentOpen(filePath, logicalView, out _, out _, out _);
+        }
+
         private string GetAbsolutePathForProjectRelativeFilePath(string projectName, string relativeFilePath)
         {
             TestServices.ThrowIfNotOnMainThread();

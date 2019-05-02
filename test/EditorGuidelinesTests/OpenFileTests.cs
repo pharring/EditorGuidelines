@@ -2,7 +2,11 @@
 
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
+using EditorGuidelinesTests.Harness;
+using Microsoft.VisualStudio;
+using WindowsInput.Native;
 using Xunit;
 
 namespace EditorGuidelinesTests
@@ -121,6 +125,37 @@ guidelines = 120
             await TestServices.Solution.OpenFileAsync(
                 projectName: Path.GetFileNameWithoutExtension(_testProjectFile),
                 relativeFilePath: Path.GetFileName(_testSourceFile));
+        }
+
+        /// <summary>
+        /// Verifies that opening the first file via a Navigate To operation will not cause an exception.
+        /// </summary>
+        [VsFact]
+        public async Task TestOpenFileFromNavigateTo()
+        {
+            await TestServices.Solution.OpenSolutionAsync(_testSolutionFile);
+
+            await TestServices.SendInput.SendAsync(
+                (VirtualKeyCode.VK_T, ShiftState.Ctrl),
+                "f Class1.cs",
+                VirtualKeyCode.RETURN);
+
+            using (var cancellationTokenSource = new CancellationTokenSource(TestServices.HangMitigatingTimeout))
+            {
+                while (true)
+                {
+                    await Task.Yield();
+                    cancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                    if (await TestServices.Solution.IsDocumentOpenAsync(
+                        projectName: Path.GetFileNameWithoutExtension(_testProjectFile),
+                        relativeFilePath: Path.GetFileName(_testSourceFile),
+                        VSConstants.LOGVIEWID.Code_guid))
+                    {
+                        break;
+                    }
+                }
+            }
         }
     }
 }
