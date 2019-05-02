@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
 using System;
+using System.Threading;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
 namespace EditorGuidelinesTests.Harness
@@ -19,5 +21,10 @@ namespace EditorGuidelinesTests.Harness
         public IServiceProvider ServiceProvider { get; }
 
         internal SolutionServices Solution { get; }
+
+        internal void ThrowIfNotOnMainThread()
+        {
+            Verify.Operation(JoinableTaskFactory.Context.MainThread == Thread.CurrentThread, "This type can only be constructed on the main thread.");
+        }
     }
 }
