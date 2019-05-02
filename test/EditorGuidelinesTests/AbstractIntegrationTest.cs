@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using EditorGuidelinesTests.Harness;
 using EditorGuidelinesTests.Threading;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
@@ -16,6 +17,8 @@ namespace EditorGuidelinesTests
         private JoinableTaskContext _joinableTaskContext;
         private JoinableTaskCollection _joinableTaskCollection;
         private JoinableTaskFactory _joinableTaskFactory;
+
+        private TestServices _testServices;
 
         protected AbstractIntegrationTest()
         {
@@ -64,14 +67,18 @@ namespace EditorGuidelinesTests
 
         protected JoinableTaskFactory JoinableTaskFactory => _joinableTaskFactory ?? throw new InvalidOperationException();
 
+        protected TestServices TestServices => _testServices ?? throw new InvalidOperationException();
+
         public virtual Task InitializeAsync()
         {
+            _testServices = new TestServices(JoinableTaskFactory, ServiceProvider);
             return Task.CompletedTask;
         }
 
         public virtual async Task DisposeAsync()
         {
             await _joinableTaskCollection.JoinTillEmptyAsync();
+            _testServices = null;
             JoinableTaskContext = null;
         }
 
