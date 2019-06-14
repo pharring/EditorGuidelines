@@ -1,6 +1,10 @@
 # Editor Guidelines
 All notable changes will be documented in this file.
 
+## Version [2.2.4] (June 14th 2019)
+### Changed
+- Updated context menu icons. Issue [#49](https://github.com/pharring/EditorGuidelines/issues/49)
+
 ## Version [2.2.3] (April 28th 2019)
 ### Added
 - Line width set in guidelines_style can now be non-integral (e.g. 0.5px)
