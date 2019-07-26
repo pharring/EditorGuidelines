@@ -10,7 +10,7 @@ All notable changes will be documented in this file.
 - Line width set in guidelines_style can now be non-integral (e.g. 0.5px)
 
 ### Fixed
-- Fixed issue [#37](https://github.com/pharring/EditorGuidelines/issues/37) where you couldn't set guidelnies via .editorconfig in HTML-based files.
+- Fixed issue [#37](https://github.com/pharring/EditorGuidelines/issues/37) where you couldn't set guidelines via .editorconfig in HTML-based files.
 
 ## Version [2.2.2] (April 21st 2019)
 ### Added
