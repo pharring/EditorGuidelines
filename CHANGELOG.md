@@ -79,6 +79,7 @@ All notable changes will be documented in this file.
 ### Changed
 - Updated description to indicate that VS 2015 is supported.
 
+[2.2.4]: https://github.com/pharring/EditorGuidelines/compare/2.2.3..2.2.4
 [2.2.3]: https://github.com/pharring/EditorGuidelines/compare/2.2.2..2.2.3
 [2.2.2]: https://github.com/pharring/EditorGuidelines/compare/2.2.1..2.2.2
 [2.2.1]: https://github.com/pharring/EditorGuidelines/compare/2.2.0..2.2.1
