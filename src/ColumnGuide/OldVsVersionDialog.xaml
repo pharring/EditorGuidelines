@@ -15,7 +15,7 @@
     WindowStartupLocation="CenterOwner"
     Title="Editor Guidelines Support">
     <StackPanel Orientation="Vertical">
-        <TextBlock Margin="10,10,10,8" FontWeight="Bold">Support for Visual Studio 2012 is ending.</TextBlock>
+        <TextBlock Margin="10,10,10,8" FontWeight="Bold">Support for Visual Studio 2012 and 2013 is ending.</TextBlock>
         <TextBlock Margin="10,0" TextWrapping="Wrap">
             <Run>Thank you for using the Editor Guidelines extension.</Run>
             <Run>This is the last version of Editor Guidelines with support for Visual Studio 2012 and 2013.</Run>
