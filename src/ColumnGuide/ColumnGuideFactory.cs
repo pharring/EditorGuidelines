@@ -2,6 +2,7 @@
 
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.VisualStudio.CodingConventions;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Windows.Media;
-
+using System.Windows.Threading;
 using static System.Globalization.CultureInfo;
 
 namespace ColumnGuide
@@ -66,11 +67,14 @@ namespace ColumnGuide
             // Show a warning dialog if running in an old version of VS
             if (IsRunningInOldVsVersion() && !TextEditorGuidesSettings.DontShowVsVersionWarning)
             {
-                var dlg = new OldVsVersionDialog();
-                if (dlg.ShowModal() == true && dlg.DontShowAgain)
+                ThreadHelper.Generic.BeginInvoke(DispatcherPriority.Background, () =>
                 {
-                    TextEditorGuidesSettings.DontShowVsVersionWarning = true;
-                }
+                    var dlg = new OldVsVersionDialog();
+                    if (dlg.ShowModal() == true && dlg.DontShowAgain)
+                    {
+                        TextEditorGuidesSettings.DontShowVsVersionWarning = true;
+                    }
+                });
             }
         }
 
