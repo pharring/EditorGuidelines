@@ -2,6 +2,7 @@
 
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Navigation;
 using Microsoft.VisualStudio.PlatformUI;
 
 namespace ColumnGuide
@@ -24,7 +25,7 @@ namespace ColumnGuide
             Close();
         }
 
-        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
