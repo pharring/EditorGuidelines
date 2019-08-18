@@ -67,11 +67,13 @@ namespace ColumnGuide
             // Show a warning dialog if running in an old version of VS
             if (IsRunningInOldVsVersion() && !TextEditorGuidesSettings.DontShowVsVersionWarning)
             {
+                Telemetry.Client.TrackEvent("ShowDeprecationWarning");
                 ThreadHelper.Generic.BeginInvoke(DispatcherPriority.Background, () =>
                 {
                     var dlg = new OldVsVersionDialog();
                     if (dlg.ShowModal() == true && dlg.DontShowAgain)
                     {
+                        Telemetry.Client.TrackEvent("DontShowDeprecationWarningAgain");
                         TextEditorGuidesSettings.DontShowVsVersionWarning = true;
                     }
                 });
