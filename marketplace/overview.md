@@ -1,13 +1,15 @@
 Editor Guidelines adds vertical column guides behind your code. This is useful if you are trying to tabulate columns of data or if you want to ensure that your lines don't extend beyond a certain length. You specify where the guides go and what color they should be.
 
 This extension is compatible with:
-- Visual Studio 2012
-- Visual Studio 2013
+- Visual Studio 2012 (see note below)
+- Visual Studio 2013 (see note below)
 - Visual Studio 2015
 - Visual Studio 2017
 - Visual Studio 2019
 
 For a version that installs on Visual Studio 2010, please go [here](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelinesVS2010).
+
+_Note: Support for VS 2012 and VS 2013 is ending soon. [Click here](https://github.com/pharring/EditorGuidelines/blob/master/VSVersionSupport.md) for more information._
 
 _Note: This extension collects and transmits anonymized usage statistics to the extension author for product improvement purposes._
 

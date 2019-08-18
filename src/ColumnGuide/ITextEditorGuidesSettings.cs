@@ -7,5 +7,7 @@ namespace ColumnGuide
     internal interface ITextEditorGuidesSettings
     {
         IEnumerable<int> GuideLinePositionsInChars { get; }
+
+        bool DontShowVsVersionWarning { get; set; }
     }
 }

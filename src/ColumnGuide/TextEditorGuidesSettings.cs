@@ -193,7 +193,7 @@ namespace ColumnGuide
             {
                 if (_guidelinesConfiguration == null)
                 {
-                    _guidelinesConfiguration = GetUserSettingsString("Text Editor", "Guides").Trim();
+                    _guidelinesConfiguration = GetUserSettingsString(c_textEditor, "Guides").Trim();
                 }
                 return _guidelinesConfiguration;
             }
@@ -203,7 +203,7 @@ namespace ColumnGuide
                 if (value != _guidelinesConfiguration)
                 {
                     _guidelinesConfiguration = value;
-                    WriteUserSettingsString("Text Editor", "Guides", value);
+                    WriteUserSettingsString(c_textEditor, "Guides", value);
                     FirePropertyChanged(nameof(ITextEditorGuidesSettings.GuideLinePositionsInChars));
                 }
             }
@@ -281,6 +281,25 @@ namespace ColumnGuide
                 }
             }
         }
+
+        public bool DontShowVsVersionWarning
+        {
+            get
+            {
+                var store = ReadOnlyUserSettings;
+                Marshal.ThrowExceptionForHR(store.GetBoolOrDefault(c_textEditor, c_dontShowVsVersionWarningPropertyName, 0, out int value));
+                return value != 0;
+            }
+
+            set
+            {
+                var store = ReadWriteUserSettings;
+                Marshal.ThrowExceptionForHR(store.SetBool(c_textEditor, c_dontShowVsVersionWarningPropertyName, value ? 1 : 0));
+            }
+        }
+
+        private const string c_textEditor = "Text Editor";
+        private const string c_dontShowVsVersionWarningPropertyName = "DontShowEditorGuidelinesVsVersionWarning";
 
         #region INotifyPropertyChanged Members
 

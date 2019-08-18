@@ -2,13 +2,15 @@
 
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.VisualStudio.CodingConventions;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Windows.Media;
-
+using System.Windows.Threading;
 using static System.Globalization.CultureInfo;
 
 namespace ColumnGuide
@@ -41,7 +43,11 @@ namespace ColumnGuide
         {
             // Always create the adornment, even if there are no guidelines, since we
             // respond to dynamic changes.
+#pragma warning disable IDE0067 // Dispose objects before losing scope
+#pragma warning disable CA2000 // Dispose objects before losing scope
             var _ = new ColumnGuide(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventionsManager, Telemetry);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+#pragma warning restore IDE0067 // Dispose objects before losing scope
         }
 
         public void OnImportsSatisfied()
@@ -57,6 +63,37 @@ namespace ColumnGuide
             {
                 settingsChanged.PropertyChanged += OnSettingsChanged;
             }
+
+            // Show a warning dialog if running in an old version of VS
+            if (IsRunningInOldVsVersion() && !TextEditorGuidesSettings.DontShowVsVersionWarning)
+            {
+                Telemetry.Client.TrackEvent("ShowDeprecationWarning");
+                ThreadHelper.Generic.BeginInvoke(DispatcherPriority.Background, () =>
+                {
+                    var dlg = new OldVsVersionDialog();
+                    if (dlg.ShowModal() == true && dlg.DontShowAgain)
+                    {
+                        Telemetry.Client.TrackEvent("DontShowDeprecationWarningAgain");
+                        TextEditorGuidesSettings.DontShowVsVersionWarning = true;
+                    }
+                });
+            }
+        }
+
+        private bool IsRunningInOldVsVersion()
+        {
+            // Check VS Version
+            var vsShell = HostServices.GetService<IVsShell>(typeof(SVsShell));
+            if (0 == vsShell.GetProperty(-9068, out var obj) && obj != null)
+            {
+                var vsVersion = obj.ToString();
+                if (vsVersion.Length >= 3 && int.TryParse(vsVersion.Substring(0, 2), out var majorVersion))
+                {
+                    return majorVersion < 14;
+                }
+            }
+
+            return false;
         }
 
         private void OnSettingsChanged(object sender, PropertyChangedEventArgs e)
@@ -116,6 +153,9 @@ namespace ColumnGuide
 
         [Import(AllowDefault = true)]
         private ICodingConventionsManager CodingConventionsManager { get; set; }
+
+        [Import]
+        private HostServices HostServices { get; set; }
     }
     #endregion //Adornment Factory
 }
