@@ -6,6 +6,9 @@
     <Copyright>Copyright © 2019 Paul Harrington</Copyright>
     <Version>2.2.5</Version>
     <LangVersion>7.3</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnlistmentRoot>$(MSBuildThisFileDirectory)</EnlistmentRoot>
+    <IsTestProject>$([MSBuild]::MakeRelative($(EnlistmentRoot), $(MSBuildProjectDirectory)).StartsWith('test\'))</IsTestProject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -22,6 +25,12 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <!-- CodeAnalysis Rules-->
+  <PropertyGroup>
+    <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == '' AND ('$(IsTestProject)' == 'true' OR '$(NonShipping)' == 'true')">$(MSBuildThisFileDirectory)\NonShipping.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)\Shipping.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
 </Project>

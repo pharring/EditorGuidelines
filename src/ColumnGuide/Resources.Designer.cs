@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.ColumnGuidePackage {
+namespace ColumnGuide {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Microsoft.ColumnGuidePackage {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.ColumnGuidePackage.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ColumnGuide.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,20 @@ namespace Microsoft.ColumnGuidePackage {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid column..
+        ///   Looks up a localized string similar to The paramenter must be between 1 and 10,000.
         /// </summary>
-        internal static string InvalidColumn {
+        internal static string AddGuidelineParameterOutOfRange {
             get {
-                return ResourceManager.GetString("InvalidColumn", resourceCulture);
+                return ResourceManager.GetString("AddGuidelineParameterOutOfRange", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Missing IVsMonitorSelection service..
+        ///   Looks up a localized string similar to The paramenter must be between 1 and 10,000.
         /// </summary>
-        internal static string MissingIVsMonitorSelectionService {
+        internal static string RemoveGuidelineParameterOutOfRange {
             get {
-                return ResourceManager.GetString("MissingIVsMonitorSelectionService", resourceCulture);
+                return ResourceManager.GetString("RemoveGuidelineParameterOutOfRange", resourceCulture);
             }
         }
     }
