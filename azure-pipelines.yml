@@ -16,9 +16,10 @@ variables:
 
 steps:
 - task: UseDotNet@2
-  displayName: 'Use .NET Core sdk'
+  displayName: 'Use .NET Core SDK from global.json'
   inputs:
-    version: 2.2.300
+    packageType: SDK
+    useGlobalJson: true
 
 - task: NuGetToolInstaller@0
 
