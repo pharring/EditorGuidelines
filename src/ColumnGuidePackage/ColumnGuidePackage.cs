@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
+using System.Windows.Threading;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Text.Editor;
-using System.Collections.Generic;
-
+using Microsoft.VisualStudio.TextManager.Interop;
 using static System.Globalization.CultureInfo;
 using static Microsoft.ColumnGuidePackage.Guids;
 
@@ -35,6 +35,8 @@ namespace Microsoft.ColumnGuidePackage
     public sealed class ColumnGuidePackage : Package
 #pragma warning restore CA1724 // Type name conflicts with namespace name
     {
+        private readonly Dispatcher _dispatcher;
+
         /// <summary>
         /// Default constructor of the package.
         /// Inside this method you can place any initialization code that does not require 
@@ -44,6 +46,7 @@ namespace Microsoft.ColumnGuidePackage
         /// </summary>
         public ColumnGuidePackage()
         {
+            _dispatcher = Dispatcher.CurrentDispatcher;
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -56,6 +59,7 @@ namespace Microsoft.ColumnGuidePackage
         /// </summary>
         protected override void Initialize()
         {
+            _dispatcher.VerifyAccess();
             base.Initialize();
 
             Telemetry.Client.TrackEvent(nameof(ColumnGuidePackage) + "." + nameof(Initialize), new Dictionary<string, string>() { ["VSVersion"] = GetShellVersion() });
@@ -84,6 +88,8 @@ namespace Microsoft.ColumnGuidePackage
 
         private string GetShellVersion()
         {
+            _dispatcher.VerifyAccess();
+
             if (GetService(typeof(SVsShell)) is IVsShell shell)
             {
                 if (ErrorHandler.Succeeded(shell.GetProperty((int)__VSSPROPID5.VSSPROPID_ReleaseVersion, out var obj)) && obj != null)
@@ -100,12 +106,14 @@ namespace Microsoft.ColumnGuidePackage
 
         private void AddColumnGuideBeforeQueryStatus(object sender, EventArgs e)
         {
+            _dispatcher.VerifyAccess();
             var currentColumn = GetCurrentEditorColumn();
             _addGuidelineCommand.Enabled = TextEditorGuidesSettingsRendezvous.Instance.CanAddGuideline(currentColumn);
         }
 
         private void RemoveColumnGuideBeforeChangeQueryStatus(object sender, EventArgs e)
         {
+            _dispatcher.VerifyAccess();
             var currentColumn = GetCurrentEditorColumn();
             _removeGuidelineCommand.Enabled = TextEditorGuidesSettingsRendezvous.Instance.CanRemoveGuideline(currentColumn);
         }
@@ -125,13 +133,14 @@ namespace Microsoft.ColumnGuidePackage
             {
                 if (!int.TryParse(inValue, out var column) || column < 0)
                 {
-                    throw new ArgumentException("Invalid column");
+                    throw new ArgumentException(Resources.InvalidColumn);
                 }
 
                 Telemetry.Client.TrackEvent("Command parameter used");
                 return column;
             }
 
+            _dispatcher.VerifyAccess();
             return GetCurrentEditorColumn();
         }
 
@@ -142,6 +151,7 @@ namespace Microsoft.ColumnGuidePackage
         /// </summary>
         private void AddColumnGuideExecuted(object sender, EventArgs e)
         {
+            _dispatcher.VerifyAccess();
             var column = GetApplicableColumn(e);
             if (column >= 0)
             {
@@ -152,6 +162,7 @@ namespace Microsoft.ColumnGuidePackage
 
         private void RemoveColumnGuideExecuted(object sender, EventArgs e)
         {
+            _dispatcher.VerifyAccess();
             var column = GetApplicableColumn(e);
             if (column >= 0)
             {
@@ -173,19 +184,25 @@ namespace Microsoft.ColumnGuidePackage
         /// active view in the active document is not a text view.</returns>
         private IVsTextView GetActiveTextView()
         {
-            var selection = GetService(typeof(IVsMonitorSelection)) as IVsMonitorSelection;
+            _dispatcher.VerifyAccess();
+            if (!(GetService(typeof(IVsMonitorSelection)) is IVsMonitorSelection selection))
+            {
+                throw new InvalidOperationException(Resources.MissingIVsMonitorSelectionService);
+            }
+
             ErrorHandler.ThrowOnFailure(selection.GetCurrentElementValue((uint)VSConstants.VSSELELEMID.SEID_DocumentFrame, out var frameObj));
 
             return frameObj is IVsWindowFrame frame ? GetActiveView(frame) : null;
         }
 
-        private static IVsTextView GetActiveView(IVsWindowFrame windowFrame)
+        private IVsTextView GetActiveView(IVsWindowFrame windowFrame)
         {
             if (windowFrame == null)
             {
                 throw new ArgumentNullException(nameof(windowFrame));
             }
 
+            _dispatcher.VerifyAccess();
             ErrorHandler.ThrowOnFailure(windowFrame.GetProperty((int)__VSFPROPID.VSFPROPID_DocView, out var pvar));
 
             var textView = pvar as IVsTextView;
@@ -240,6 +257,7 @@ namespace Microsoft.ColumnGuidePackage
 
         private int GetCurrentEditorColumn()
         {
+            _dispatcher.VerifyAccess();
             var view = GetActiveTextView();
             if (view == null)
             {

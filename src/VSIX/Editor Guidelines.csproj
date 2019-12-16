@@ -21,12 +21,8 @@
     <DeployExtension Condition="'$(BUILD_BUILDID)' != ''">false</DeployExtension>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <CodeAnalysisRuleSet />
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.4.1057" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

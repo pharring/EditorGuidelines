@@ -85,7 +85,7 @@ namespace ColumnGuide
         {
             if (!IsValidColumn(column))
             {
-                throw new ArgumentOutOfRangeException(nameof(column), "The paramenter must be between 1 and 10,000");
+                throw new ArgumentOutOfRangeException(nameof(column), Resources.AddGuidelineParameterOutOfRange);
             }
 
             if (GetCountOfGuidelines() >= c_maxGuides)
@@ -110,7 +110,7 @@ namespace ColumnGuide
         {
             if (!IsValidColumn(column))
             {
-                throw new ArgumentOutOfRangeException(nameof(column), "The paramenter must be between 1 and 10,000");
+                throw new ArgumentOutOfRangeException(nameof(column), Resources.RemoveGuidelineParameterOutOfRange);
             }
 
             var columns = new List<int>(GuideLinePositionsInChars);

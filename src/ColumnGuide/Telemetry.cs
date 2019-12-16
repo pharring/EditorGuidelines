@@ -37,6 +37,7 @@ namespace ColumnGuide
 
         private static TelemetryClient CreateClient()
         {
+#pragma warning disable CA2000 // Dispose objects before losing scope. The TelemetryClient will own it.
             var configuration = new TelemetryConfiguration
             {
                 InstrumentationKey = c_instrumentationKey,
@@ -49,6 +50,7 @@ namespace ColumnGuide
 #endif
                 }
             };
+#pragma warning restore CA2000 // Dispose objects before losing scope
 
             // Keep this context as small as possible since it's sent with every event.
             var client = new TelemetryClient(configuration);
@@ -60,7 +62,11 @@ namespace ColumnGuide
         private static byte[] GetRandomBytes(int length)
         {
             var buff = new byte[length];
-            RandomNumberGenerator.Create().GetBytes(buff);
+            using (var rnd = RandomNumberGenerator.Create())
+            {
+                rnd.GetBytes(buff);
+            }
+
             return buff;
         }
 
