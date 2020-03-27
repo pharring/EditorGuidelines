@@ -1,8 +1,9 @@
-// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
+﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
 using Xunit;
 using ColumnGuide;
 using System.Windows.Media;
+using System.Linq;
 
 namespace ColumnGuideTests
 {
@@ -21,8 +22,8 @@ namespace ColumnGuideTests
         [InlineData("ABC, 3.14, 80", 80)]
         public void ParseGuidelinePositionsTest(string codingConvention, params int[] expected)
         {
-            var actual = Parser.ParseGuidelinePositionsFromCodingConvention(codingConvention);
-            Assert.True(actual.SetEquals(expected));
+            var actual = Parser.ParseGuidelinesFromCodingConvention(codingConvention, null);
+            Assert.True(actual.SetEquals(from column in expected select new Guideline(column, null)));
         }
 
         [Theory]
@@ -55,6 +56,28 @@ namespace ColumnGuideTests
                 var expectedColor = Color.FromArgb(expectedA, expectedR, expectedG, expectedB);
                 Assert.Equal(expectedColor, strokeParameters.BrushColor);
             }
+        }
+
+        [Fact]
+        public void ParseGuidelinesTest()
+        {
+            var codingConvention = "40 1px solid red, , 60, 80 0.5px dashed 10203040, 132 4px ignored";
+            Assert.True(Parser.TryParseStrokeParametersFromCodingConvention("1px dotted gold", out var fallbackStrokeParameters));
+            var actual = Parser.ParseGuidelinesFromCodingConvention(codingConvention, fallbackStrokeParameters);
+
+            Assert.Equal(4, actual.Count);
+
+            // Normal case
+            Assert.Contains(new Guideline(40, new StrokeParameters { StrokeThickness = 1, LineStyle = LineStyle.Solid, Brush = Brushes.Red }), actual);
+            
+            // Uses fallback stroke parameters
+            Assert.Contains(new Guideline(60, fallbackStrokeParameters), actual);
+
+            // Normal case with hex color
+            Assert.Contains(new Guideline(80, new StrokeParameters { StrokeThickness = 0.5, LineStyle = LineStyle.Dashed, Brush = new SolidColorBrush(Color.FromArgb(0x10, 0x20, 0x30, 0x40)) }), actual);
+
+            // Partial style definition
+            Assert.Contains(new Guideline(132, new StrokeParameters { StrokeThickness = 4, Brush = Brushes.Black }), actual);
         }
     }
 }

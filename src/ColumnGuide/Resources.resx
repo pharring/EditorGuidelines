@@ -118,11 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddGuidelineParameterOutOfRange" xml:space="preserve">
-    <value>The paramenter must be between 1 and 10,000</value>
+    <value>The parameter must be between 0 and 10,000</value>
     <comment>Error message when an invalid value is passed to AddGuideline</comment>
   </data>
   <data name="RemoveGuidelineParameterOutOfRange" xml:space="preserve">
-    <value>The paramenter must be between 1 and 10,000</value>
+    <value>The parameter must be between 0 and 10,000</value>
     <comment>Error message when an invalid value is passed to RemoveGuideline</comment>
   </data>
 </root>

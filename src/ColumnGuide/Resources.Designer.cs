@@ -61,7 +61,7 @@ namespace ColumnGuide {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The paramenter must be between 1 and 10,000.
+        ///   Looks up a localized string similar to The parameter must be between 0 and 10,000.
         /// </summary>
         internal static string AddGuidelineParameterOutOfRange {
             get {
@@ -70,7 +70,7 @@ namespace ColumnGuide {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The paramenter must be between 1 and 10,000.
+        ///   Looks up a localized string similar to The parameter must be between 0 and 10,000.
         /// </summary>
         internal static string RemoveGuidelineParameterOutOfRange {
             get {
