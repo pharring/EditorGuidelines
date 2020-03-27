@@ -2,6 +2,7 @@
 
 using System;
 using System.Windows.Media;
+using static System.FormattableString;
 
 namespace ColumnGuide
 {
@@ -20,10 +21,12 @@ namespace ColumnGuide
         private static readonly DoubleCollection s_solidDashArray = new DoubleCollection();
 
         /// <summary>
-        /// Create an instance from the given brush.
+        /// Create an instance from the given brush. The default thickness and line style are used.
         /// </summary>
         /// <param name="brush">The brush.</param>
         /// <returns>A new instance.</returns>
+        /// <remarks>This is used to create a <see cref="StrokeParameters"/> when all we have is a
+        /// brush from Fonts & Colors.</remarks>
         public static StrokeParameters FromBrush(Brush brush) => new StrokeParameters { Brush = brush };
 
         /// <summary>
@@ -81,10 +84,12 @@ namespace ColumnGuide
         /// <remarks>Internal for testing.</remarks>
         internal Color BrushColor => (Brush is SolidColorBrush solidColorBrush) ? solidColorBrush.Color : default;
 
-        public bool Equals(StrokeParameters other) => BrushColor == other.BrushColor && StrokeThickness == other.StrokeThickness && LineStyle == other.LineStyle;
+        public bool Equals(StrokeParameters other) => other != null && BrushColor == other.BrushColor && StrokeThickness == other.StrokeThickness && LineStyle == other.LineStyle;
 
         public override bool Equals(object obj) => obj is StrokeParameters other && Equals(other);
 
-        public override int GetHashCode() => unchecked(Brush.GetHashCode() + StrokeThickness.GetHashCode() + LineStyle.GetHashCode()); 
+        public override int GetHashCode() => unchecked(Brush.GetHashCode() + StrokeThickness.GetHashCode() + LineStyle.GetHashCode());
+
+        public override string ToString() => Invariant($"{StrokeThickness}px {LineStyle} {BrushColor}");
     }
 }

@@ -113,23 +113,18 @@ namespace ColumnGuide
         }
 
         internal static void AddBrushColorAndGuidelinePositionsToTelemetry(EventTelemetry eventTelemetry, Brush brush, IEnumerable<int> positions)
-            => AddStrokeParametersAndPositionsToTelemetry(eventTelemetry, StrokeParameters.FromBrush(brush), positions);
-
-        internal static void AddStrokeParametersAndPositionsToTelemetry(EventTelemetry eventTelemetry, StrokeParameters strokeParameters, IEnumerable<int> positions)
         {
             var telemetryProperties = eventTelemetry.Properties;
 
-            if (strokeParameters.Brush != null)
+            if (brush != null)
             {
-                telemetryProperties.Add("Color", strokeParameters.Brush.ToString(InvariantCulture) ?? "unknown");
+                telemetryProperties.Add("Color", brush.ToString(InvariantCulture) ?? "unknown");
 
-                if (strokeParameters.Brush.Opacity != 1.0)
+                if (brush.Opacity != 1.0)
                 {
-                    eventTelemetry.Metrics.Add("Opacity", strokeParameters.Brush.Opacity);
+                    eventTelemetry.Metrics.Add("Opacity", brush.Opacity);
                 }
             }
-
-            telemetryProperties.Add("Style", strokeParameters.LineStyle.ToString());
 
             var count = 0;
             foreach (var column in positions)
@@ -138,7 +133,20 @@ namespace ColumnGuide
                 count++;
             }
 
-            eventTelemetry.Metrics.Add("Thickness", strokeParameters.StrokeThickness);
+            eventTelemetry.Metrics.Add("Count", count);
+        }
+
+        internal static void AddGuidelinesToTelemetry(EventTelemetry eventTelemetry, IEnumerable<Guideline> guidelines)
+        {
+            var telemetryProperties = eventTelemetry.Properties;
+
+            var count = 0;
+            foreach (var guideline in guidelines)
+            {
+                telemetryProperties.Add("guide" + count.ToString(InvariantCulture), guideline.ToString());
+                count++;
+            }
+
             eventTelemetry.Metrics.Add("Count", count);
         }
 

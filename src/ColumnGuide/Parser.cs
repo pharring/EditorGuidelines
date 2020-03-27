@@ -15,24 +15,73 @@ namespace ColumnGuide
         /// <summary>
         /// Note: Semicolon is not a valid separator because it's treated as a comment in .editorconfig
         /// </summary>
-        private static readonly char[] s_separators = new[] { ',', ':', ' ' };
+        private static readonly char[] s_separators = { ',', ':', ' ' };
 
-        public static HashSet<int> ParseGuidelinePositionsFromCodingConvention(string codingConvention)
+        private static readonly char[] s_space= { ' ' };
+
+        private static readonly char[] s_comma = { ',' };
+
+        public static HashSet<Guideline> ParseGuidelinesFromCodingConvention(string codingConvention, StrokeParameters fallbackStrokeParameters)
         {
-            var result = new HashSet<int>();
+            // First try parsing as a sequence of columns and styles separated by commas.
+            var result = ParseGuidelines(codingConvention, fallbackStrokeParameters);
+            if (result != null)
+            {
+                return result;
+            }
+
+            // Fall back to parsing as just a set of column positions, ignoring any unparsable values.
+            result = new HashSet<Guideline>();
             foreach (var position in GetTokens(codingConvention, s_separators))
             {
                 if (TryParsePosition(position, out int column))
                 {
-                    result.Add(column);
+                    result.Add(new Guideline(column, fallbackStrokeParameters));
                 }
             }
 
             return result;
         }
 
+        /// <summary>
+        /// Try to parse as a sequence of columns and styles separated by commas.
+        /// e.g. 40 1px solid red, 80 2px dashed blue
+        /// The style part is optional but, if present, it must be well-formed.
+        /// </summary>
+        /// <param name="codingConvention">The coding convention.</param>
+        /// <param name="fallbackStrokeParameters">Stroke parameters to use when the style is not specified.</param>
+        /// <returns>The set of guidelines if successful, or null if not.</returns>
+        private static HashSet<Guideline> ParseGuidelines(string codingConvention, StrokeParameters fallbackStrokeParameters)
+        {
+            var set = new HashSet<Guideline>();
+            foreach (var token in GetTokens(codingConvention, s_comma))
+            {
+                var partEnumerator = GetTokens(token, s_space);
+                if (!partEnumerator.MoveNext())
+                {
+                    // Empty token. Ignore and continue.
+                    continue;
+                }
+
+                if (!TryParsePosition(partEnumerator.Current, out var column))
+                {
+                    return null;
+                }
+
+                var strokeParameters = fallbackStrokeParameters;
+                if (partEnumerator.MoveNext() && !TryParseStrokeParameters(partEnumerator, out strokeParameters))
+                {
+                    return null;
+                }
+
+                set.Add(new Guideline(column, strokeParameters?.Freeze()));
+            }
+
+            return set;
+        }
+
         public static bool TryParsePosition(string text, out int column)
-            => int.TryParse(text, out column) && column >= 0 && column < 10000;
+            => int.TryParse(text, out column) && Guideline.IsValidColumn(column);
 
         /// <summary>
         /// The guideline_style looks like this:
@@ -47,13 +96,19 @@ namespace ColumnGuide
         /// <returns>True if parameters were parsed. False otherwise.</returns>
         public static bool TryParseStrokeParametersFromCodingConvention(string text, out StrokeParameters strokeParameters)
         {
-            strokeParameters = null;
-
             var tokensEnumerator = GetTokens(text, s_separators).GetEnumerator();
             if (!tokensEnumerator.MoveNext())
             {
+                strokeParameters = null;
                 return false;
             }
+
+            return TryParseStrokeParameters(tokensEnumerator, out strokeParameters);
+        }
+
+        private static bool TryParseStrokeParameters(TokenEnumerator tokensEnumerator, out StrokeParameters strokeParameters)
+        {
+            strokeParameters = null;
 
             // Pixel width (stroke thickness)
             var token = tokensEnumerator.Current;

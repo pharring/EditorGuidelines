@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Text;
 
 using static System.Globalization.CultureInfo;
+using static ColumnGuide.Guideline;
 
 namespace ColumnGuide
 {
@@ -161,17 +162,6 @@ namespace ColumnGuide
             }
             return i;
         }
-
-        /// <summary>
-        /// Check if the given column is valid.
-        /// Negative values are not allowed.
-        /// Zero is allowed (per user request)
-        /// 10000 seems like a sensible upper limit.
-        /// </summary>
-        /// <param name="column">The column.</param>
-        /// <returns>True if <paramref name="column"/> is valid.</returns>
-        private static bool IsValidColumn(int column) =>
-            0 <= column && column <= 10000;
 
         private bool IsGuidelinePresent(int column)
         {
