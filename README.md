@@ -45,7 +45,7 @@ guidelines = 80
 guidelines = 80, 120
 ```
 
-You can also set the guideline style like this:
+You can set the guideline style like this:
 ```ini
 [*]
 # Named color format
@@ -61,6 +61,13 @@ As shown, you can have different styles for different file types. There are thre
 - dashed
 
 As the examples show, colors may be named or in RGB or ARGB (hexadecimal) format. The available color names are from WPF's Colors collection (System.Windows.Media.Colors).
+
+As the following example shows, you can set the style for each guideline separately. Three guidelines are defined. The first two define custom styles. The third, at column 132 doesn't specify a style, so it will be drawn using the default style which, if not specified via `guidelines_style`, will take its color from Fonts & Colors.
+
+```ini
+[*]
+guidelines = 40 1px dotted black, 80 10px solid 30B0ED4C, 132
+```
 
 To learn more about .editorconfig see https://aka.ms/editorconfigdocs
 
