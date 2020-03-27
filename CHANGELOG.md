@@ -1,6 +1,13 @@
 # Editor Guidelines
 All notable changes will be documented in this file.
 
+## Version [2.2.5] (March 26th 2020)
+###
+- Last version to support VS 2012 and VS 2013
+
+### Added
+- Support for different style for each guideline specified in .editorconfig
+
 ## Version [2.2.4] (June 14th 2019)
 ### Changed
 - Updated context menu icons. Issue [#49](https://github.com/pharring/EditorGuidelines/issues/49)
@@ -79,6 +86,7 @@ All notable changes will be documented in this file.
 ### Changed
 - Updated description to indicate that VS 2015 is supported.
 
+[2.2.5]: https://github.com/pharring/EditorGuidelines/compare/2.2.4..2.2.5
 [2.2.4]: https://github.com/pharring/EditorGuidelines/compare/2.2.3..2.2.4
 [2.2.3]: https://github.com/pharring/EditorGuidelines/compare/2.2.2..2.2.3
 [2.2.2]: https://github.com/pharring/EditorGuidelines/compare/2.2.1..2.2.2

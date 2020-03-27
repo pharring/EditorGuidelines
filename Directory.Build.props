@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <Company>Paul Harrington</Company>
-    <Copyright>Copyright © 2019 Paul Harrington</Copyright>
+    <Copyright>Copyright © 2020 Paul Harrington</Copyright>
     <Version>2.2.5</Version>
     <LangVersion>7.3</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
