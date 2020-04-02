@@ -1,31 +1,21 @@
 ﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
-using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.VisualStudio.CodingConventions;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using static ColumnGuide.Parser;
 
 namespace ColumnGuide
 {
     /// <summary>
     /// Adornment class that draws vertical guide lines beneath the text
     /// </summary>
-    internal class ColumnGuide : IDisposable
+    internal class ColumnGuide
     {
-        /// <summary>
-        /// Limits the number of telemetry events for .editorconfig settings.
-        /// </summary>
-        private static bool s_sentEditorConfigTelemetry;
-
         /// <summary>
         /// Collection of WPF lines that are drawn into our adornment.
         /// </summary>
@@ -45,7 +35,6 @@ namespace ColumnGuide
         private double _columnWidth;
 
         private INotifyPropertyChanged _settingsChanged;
-        private readonly ITelemetry _telemetry;
 
         /// <summary>
         /// The brush supplied by Fonts and Colors
@@ -57,30 +46,18 @@ namespace ColumnGuide
         /// </summary>
         private readonly StrokeParameters _strokeParameters;
 
-        private readonly CancellationTokenSource _codingConventionsCancellationTokenSource;
-        private bool _isUsingCodingConvention;
-
         /// <summary>
         /// Creates editor column guidelines
         /// </summary>
         /// <param name="view">The <see cref="IWpfTextView"/> upon which the adornment will be drawn</param>
         /// <param name="settings">The guideline settings.</param>
         /// <param name="guidelineBrush">The guideline brush.</param>
-        /// <param name="codingConventionsManager">The coding conventions manager for handling .editorconfig settings.</param>
-        /// <param name="telemetry">Telemetry interface.</param>
-        public ColumnGuide(IWpfTextView view, ITextEditorGuidesSettings settings, GuidelineBrush guidelineBrush, ICodingConventionsManager codingConventionsManager, ITelemetry telemetry)
+        public ColumnGuide(IWpfTextView view, ITextEditorGuidesSettings settings, GuidelineBrush guidelineBrush)
         {
             _view = view;
-            _telemetry = telemetry;
             _guidelineBrush = guidelineBrush;
             _guidelineBrush.BrushChanged += GuidelineBrushChanged;
             _strokeParameters = StrokeParameters.FromBrush(_guidelineBrush.Brush);
-
-            if (codingConventionsManager != null && view.TryGetTextDocument(out var textDocument))
-            {
-                _codingConventionsCancellationTokenSource = new CancellationTokenSource();
-                var fireAndForgetTask = LoadGuidelinesFromEditorConfigAsync(codingConventionsManager, textDocument.FilePath);
-            }
 
             InitializeGuidelines(settings.GuideLinePositionsInChars);
 
@@ -108,11 +85,6 @@ namespace ColumnGuide
 
         private void ViewClosed(object sender, EventArgs e)
         {
-            if (_codingConventionsCancellationTokenSource != default(CancellationTokenSource))
-            {
-                _codingConventionsCancellationTokenSource.Cancel();
-            }
-
             _view.LayoutChanged -= OnViewLayoutChanged;
             _view.Closed -= ViewClosed;
             if (_settingsChanged != null)
@@ -136,7 +108,7 @@ namespace ColumnGuide
 
         private void SettingsChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!_isUsingCodingConvention && sender is ITextEditorGuidesSettings settings && e.PropertyName == nameof(ITextEditorGuidesSettings.GuideLinePositionsInChars))
+            if (sender is ITextEditorGuidesSettings settings && e.PropertyName == nameof(ITextEditorGuidesSettings.GuideLinePositionsInChars))
             {
                 var guidelines = GuidelinesFromSettings(settings.GuideLinePositionsInChars);
                 GuidelinesChanged(guidelines);
@@ -273,91 +245,6 @@ namespace ColumnGuide
             }
         }
 
-        /// <summary>
-        /// Try to load guideline positions from .editorconfig
-        /// </summary>
-        /// <param name="codingConventionsManager">The coding conventions (.editorconfig) manager.</param>
-        /// <param name="filePath">Path to the document being edited.</param>
-        /// <returns>A task which completes when the convention has been loaded and applied.</returns>
-        private async Task LoadGuidelinesFromEditorConfigAsync(ICodingConventionsManager codingConventionsManager, string filePath)
-        {
-            var cancellationToken = _codingConventionsCancellationTokenSource.Token;
-            var codingConventionContext = await codingConventionsManager.GetConventionContextAsync(filePath, cancellationToken).ConfigureAwait(false);
-
-            codingConventionContext.CodingConventionsChangedAsync += OnCodingConventionsChangedAsync;
-            cancellationToken.Register(() => codingConventionContext.CodingConventionsChangedAsync -= OnCodingConventionsChangedAsync);
-
-            await UpdateGuidelinesFromCodingConventionAsync(codingConventionContext, cancellationToken).ConfigureAwait(false);
-        }
-
-        private Task OnCodingConventionsChangedAsync(object sender, CodingConventionsChangedEventArgs arg) => UpdateGuidelinesFromCodingConventionAsync((ICodingConventionContext)sender, _codingConventionsCancellationTokenSource.Token);
-
-        private Task UpdateGuidelinesFromCodingConventionAsync(ICodingConventionContext codingConventionContext, CancellationToken cancellationToken)
-        {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return Task.FromCanceled(cancellationToken);
-            }
-
-            StrokeParameters strokeParameters = null;
-
-            if (codingConventionContext.CurrentConventions.TryGetConventionValue("guidelines_style", out string guidelines_style))
-            {
-                if (TryParseStrokeParametersFromCodingConvention(guidelines_style, out strokeParameters))
-                {
-                    _isUsingCodingConvention = true;
-                    strokeParameters.Freeze();
-                }
-            }
-
-            ICollection<Guideline> guidelines = null;
-
-            if (codingConventionContext.CurrentConventions.TryGetConventionValue("guidelines", out string guidelinesConventionValue))
-            {
-                guidelines = ParseGuidelinesFromCodingConvention(guidelinesConventionValue, strokeParameters);
-            }
-
-            // Also support max_line_length: https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#max_line_length
-            if (codingConventionContext.CurrentConventions.TryGetConventionValue("max_line_length", out string max_line_length) && TryParsePosition(max_line_length, out int maxLineLengthValue))
-            {
-                (guidelines ?? (guidelines = new List<Guideline>())).Add(new Guideline(maxLineLengthValue, strokeParameters));
-            }
-
-            if (guidelines != null)
-            {
-                // Override 'classic' settings.
-                _isUsingCodingConvention = true;
-
-                // TODO: await JoinableTaskFactory.SwitchToMainThreadAsync();
-                _view.VisualElement.Dispatcher.BeginInvoke(new Action<IEnumerable<Guideline>>(GuidelinesChanged), guidelines);
-            }
-
-            if (_isUsingCodingConvention && !s_sentEditorConfigTelemetry)
-            {
-                var eventTelemetry = new EventTelemetry("EditorConfig");
-                if (!string.IsNullOrEmpty(guidelinesConventionValue))
-                {
-                    eventTelemetry.Properties.Add("Convention", guidelinesConventionValue);
-                }
-
-                if (!string.IsNullOrEmpty(max_line_length))
-                {
-                    eventTelemetry.Properties.Add(nameof(max_line_length), max_line_length);
-                }
-
-                if (!string.IsNullOrEmpty(guidelines_style))
-                {
-                    eventTelemetry.Properties.Add(nameof(guidelines_style), guidelines_style);
-                }
-
-                ColumnGuideAdornmentFactory.AddGuidelinesToTelemetry(eventTelemetry, guidelines);
-                _telemetry.Client.TrackEvent(eventTelemetry);
-                s_sentEditorConfigTelemetry = true;
-            }
-
-            return Task.CompletedTask;
-        }
-
         private bool HaveGuidelinesChanged(IEnumerable<Guideline> newGuidelines)
         {
             if (_lines == null)
@@ -368,7 +255,5 @@ namespace ColumnGuide
             var currentGuidelines = from line in _lines select (Guideline)line.DataContext;
             return !currentGuidelines.SequenceEqual(newGuidelines);
         }
-
-        public void Dispose() => _codingConventionsCancellationTokenSource.Dispose();
     }
 }

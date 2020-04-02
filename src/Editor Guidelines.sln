@@ -38,8 +38,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{A5C7FD
 		..\marketplace\images\FontsAndColors.png = ..\marketplace\images\FontsAndColors.png
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColumnGuideTests", "..\test\ColumnGuideTests\ColumnGuideTests.csproj", "{38832BD0-0B36-410A-914D-2E5BA06EBA6A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EditorGuidelinesTests", "..\test\EditorGuidelinesTests\EditorGuidelinesTests.csproj", "{6833372A-EFD7-4628-AA35-B95BFB0861B9}"
 EndProject
 Global
@@ -60,10 +58,6 @@ Global
 		{BD32086D-4DD4-43E4-B1DF-69DA079DA88C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD32086D-4DD4-43E4-B1DF-69DA079DA88C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD32086D-4DD4-43E4-B1DF-69DA079DA88C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38832BD0-0B36-410A-914D-2E5BA06EBA6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38832BD0-0B36-410A-914D-2E5BA06EBA6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38832BD0-0B36-410A-914D-2E5BA06EBA6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38832BD0-0B36-410A-914D-2E5BA06EBA6A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6833372A-EFD7-4628-AA35-B95BFB0861B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6833372A-EFD7-4628-AA35-B95BFB0861B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6833372A-EFD7-4628-AA35-B95BFB0861B9}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
 using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.VisualStudio.CodingConventions;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using System.Collections.Generic;
@@ -42,7 +41,7 @@ namespace ColumnGuide
             // respond to dynamic changes.
 #pragma warning disable IDE0067 // Dispose objects before losing scope
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            var _ = new ColumnGuide(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventionsManager, Telemetry);
+            var _ = new ColumnGuide(textView, TextEditorGuidesSettings, GuidelineBrush);
 #pragma warning restore CA2000 // Dispose objects before losing scope
 #pragma warning restore IDE0067 // Dispose objects before losing scope
         }
@@ -124,9 +123,6 @@ namespace ColumnGuide
 
         [Import]
         private GuidelineBrush GuidelineBrush { get; set; }
-
-        [Import(AllowDefault = true)]
-        private ICodingConventionsManager CodingConventionsManager { get; set; }
 
         [Import]
         private HostServices HostServices { get; set; }
