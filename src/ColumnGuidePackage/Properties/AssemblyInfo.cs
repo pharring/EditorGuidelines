@@ -3,6 +3,7 @@
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -15,3 +16,5 @@ using System.Runtime.InteropServices;
 
 [assembly: ProvideCodeBase(CodeBase = "Microsoft.ApplicationInsights.dll")]
 [assembly: ProvideCodeBase(CodeBase = "Microsoft.VisualStudio.CodingConventions.dll")]
+
+[assembly: InternalsVisibleTo("ColumnGuideTests")]

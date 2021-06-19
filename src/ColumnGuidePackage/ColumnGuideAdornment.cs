@@ -45,7 +45,6 @@ namespace EditorGuidelines
         private double _columnWidth;
 
         private INotifyPropertyChanged _settingsChanged;
-        private readonly ITelemetry _telemetry;
 
         /// <summary>
         /// The brush supplied by Fonts and Colors
@@ -68,10 +67,9 @@ namespace EditorGuidelines
         /// <param name="guidelineBrush">The guideline brush.</param>
         /// <param name="codingConventionsManager">The coding conventions manager for handling .editorconfig settings.</param>
         /// <param name="telemetry">Telemetry interface.</param>
-        public ColumnGuideAdornment(IWpfTextView view, ITextEditorGuidesSettings settings, GuidelineBrush guidelineBrush, ICodingConventionsManager codingConventionsManager, ITelemetry telemetry)
+        public ColumnGuideAdornment(IWpfTextView view, ITextEditorGuidesSettings settings, GuidelineBrush guidelineBrush, ICodingConventionsManager codingConventionsManager)
         {
             _view = view;
-            _telemetry = telemetry;
             _guidelineBrush = guidelineBrush;
             _guidelineBrush.BrushChanged += GuidelineBrushChanged;
             _strokeParameters = StrokeParameters.FromBrush(_guidelineBrush.Brush);
@@ -329,7 +327,9 @@ namespace EditorGuidelines
                 _isUsingCodingConvention = true;
 
                 // TODO: await JoinableTaskFactory.SwitchToMainThreadAsync();
+#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
                 _view.VisualElement.Dispatcher.BeginInvoke(new Action<IEnumerable<Guideline>>(GuidelinesChanged), guidelines);
+#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
             }
 
             if (_isUsingCodingConvention && !s_sentEditorConfigTelemetry)
@@ -351,7 +351,7 @@ namespace EditorGuidelines
                 }
 
                 ColumnGuideAdornmentFactory.AddGuidelinesToTelemetry(eventTelemetry, guidelines);
-                _telemetry.Client.TrackEvent(eventTelemetry);
+                Telemetry.Client.TrackEvent(eventTelemetry);
                 s_sentEditorConfigTelemetry = true;
             }
 

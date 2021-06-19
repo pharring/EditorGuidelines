@@ -61,6 +61,15 @@ namespace EditorGuidelines {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The parameter must be between 0 and 10,000.
+        /// </summary>
+        internal static string AddGuidelineParameterOutOfRange {
+            get {
+                return ResourceManager.GetString("AddGuidelineParameterOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid column..
         /// </summary>
         internal static string InvalidColumn {
@@ -75,6 +84,15 @@ namespace EditorGuidelines {
         internal static string MissingIVsMonitorSelectionService {
             get {
                 return ResourceManager.GetString("MissingIVsMonitorSelectionService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The parameter must be between 0 and 10,000.
+        /// </summary>
+        internal static string RemoveGuidelineParameterOutOfRange {
+            get {
+                return ResourceManager.GetString("RemoveGuidelineParameterOutOfRange", resourceCulture);
             }
         }
     }

@@ -44,7 +44,7 @@ namespace EditorGuidelines
             // respond to dynamic changes.
 #pragma warning disable IDE0067 // Dispose objects before losing scope
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            var _ = new ColumnGuideAdornment(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventionsManager, Telemetry);
+            var _ = new ColumnGuideAdornment(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventionsManager);
 #pragma warning restore CA2000 // Dispose objects before losing scope
 #pragma warning restore IDE0067 // Dispose objects before losing scope
         }
@@ -120,9 +120,6 @@ namespace EditorGuidelines
 
         [Import]
         private ITextEditorGuidesSettings TextEditorGuidesSettings { get; set; }
-
-        [Import]
-        private ITelemetry Telemetry { get; set; }
 
         [Import]
         private GuidelineBrush GuidelineBrush { get; set; }
