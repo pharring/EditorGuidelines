@@ -28,7 +28,7 @@ namespace EditorGuidelines
     // a package.
     [PackageRegistration(UseManagedResourcesOnly = true)]
     // This attribute is needed to let the shell know that this package exposes some menus.
-    [ProvideMenuResource("Menus.ctmenu", 2)]
+    [ProvideMenuResource("Menus.ctmenu", version: 2)]
     [Guid(PackageGuidString)]
 #pragma warning disable CA1724 // Type name conflicts with namespace name
     public sealed class EditorGuidelinesPackage : Package
