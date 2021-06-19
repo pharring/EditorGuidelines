@@ -6,26 +6,26 @@ namespace EditorGuidelinesTests.Harness
 {
     public readonly struct KeyboardInput
     {
-        internal readonly object Value;
+        internal readonly object _value;
 
         private KeyboardInput(string value)
         {
-            Value = value;
+            _value = value;
         }
 
         private KeyboardInput(char value)
         {
-            Value = value;
+            _value = value;
         }
 
         private KeyboardInput(VirtualKeyCode value)
         {
-            Value = value;
+            _value = value;
         }
 
         private KeyboardInput((VirtualKeyCode virtualKeyCode, ShiftState shiftState) value)
         {
-            Value = value;
+            _value = value;
         }
 
         public static implicit operator KeyboardInput(string value) => new KeyboardInput(value);
