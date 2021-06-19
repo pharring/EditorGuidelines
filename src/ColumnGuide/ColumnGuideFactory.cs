@@ -22,12 +22,14 @@ namespace EditorGuidelines
     [TextViewRole(PredefinedTextViewRoles.Document)]
     internal sealed class ColumnGuideAdornmentFactory : IWpfTextViewCreationListener, IPartImportsSatisfiedNotification
     {
+        public const string AdornmentLayerName = "ColumnGuide";
+
         /// <summary>
         /// Defines the adornment layer for the adornment. This layer is ordered 
         /// below the text in the Z-order
         /// </summary>
         [Export(typeof(AdornmentLayerDefinition))]
-        [Name("ColumnGuide")]
+        [Name(AdornmentLayerName)]
         [Order(Before = PredefinedAdornmentLayers.Text)]
         [TextViewRole(PredefinedTextViewRoles.Document)]
         public AdornmentLayerDefinition editorAdornmentLayer = null;

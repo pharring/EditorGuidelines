@@ -258,7 +258,7 @@ namespace EditorGuidelines
         private void AddGuidelinesToAdornmentLayer()
         {
             // Get a reference to our adornment layer.
-            var adornmentLayer = _view.GetAdornmentLayer("ColumnGuide");
+            var adornmentLayer = _view.GetAdornmentLayer(ColumnGuideAdornmentFactory.AdornmentLayerName);
             if (adornmentLayer == null)
             {
                 return;
