@@ -63,37 +63,6 @@ namespace ColumnGuide
             {
                 settingsChanged.PropertyChanged += OnSettingsChanged;
             }
-
-            // Show a warning dialog if running in an old version of VS
-            if (IsRunningInOldVsVersion() && !TextEditorGuidesSettings.DontShowVsVersionWarning)
-            {
-                Telemetry.Client.TrackEvent("ShowDeprecationWarning");
-                ThreadHelper.Generic.BeginInvoke(DispatcherPriority.Background, () =>
-                {
-                    var dlg = new OldVsVersionDialog();
-                    if (dlg.ShowModal() == true && dlg.DontShowAgain)
-                    {
-                        Telemetry.Client.TrackEvent("DontShowDeprecationWarningAgain");
-                        TextEditorGuidesSettings.DontShowVsVersionWarning = true;
-                    }
-                });
-            }
-        }
-
-        private bool IsRunningInOldVsVersion()
-        {
-            // Check VS Version
-            var vsShell = HostServices.GetService<IVsShell>(typeof(SVsShell));
-            if (0 == vsShell.GetProperty(-9068, out var obj) && obj != null)
-            {
-                var vsVersion = obj.ToString();
-                if (vsVersion.Length >= 3 && int.TryParse(vsVersion.Substring(0, 2), out var majorVersion))
-                {
-                    return majorVersion < 14;
-                }
-            }
-
-            return false;
         }
 
         private void OnSettingsChanged(object sender, PropertyChangedEventArgs e)

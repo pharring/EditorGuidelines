@@ -4,7 +4,7 @@
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
 
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <RootNamespace>Microsoft.ColumnGuidePackage</RootNamespace>
     <UseCodebase>true</UseCodebase>
     <CreateVsixContainer>False</CreateVsixContainer>

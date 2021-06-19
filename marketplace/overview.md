@@ -1,16 +1,5 @@
 Editor Guidelines adds vertical column guides behind your code. This is useful if you are trying to tabulate columns of data or if you want to ensure that your lines don't extend beyond a certain length. You specify where the guides go and what color they should be.
 
-This extension is compatible with:
-- Visual Studio 2012 (see note below)
-- Visual Studio 2013 (see note below)
-- Visual Studio 2015
-- Visual Studio 2017
-- Visual Studio 2019
-
-For a version that installs on Visual Studio 2010, please go [here](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelinesVS2010).
-
-_Note: Support for VS 2012 and VS 2013 is ending soon. [Click here](https://github.com/pharring/EditorGuidelines/blob/master/VSVersionSupport.md) for more information._
-
 _Note: This extension collects and transmits anonymized usage statistics to the extension author for product improvement purposes._
 
 ## Getting Started
@@ -29,8 +18,8 @@ You can change the guideline color from the Fonts and Colors page in Tools/Optio
 
 ![Fonts and Colors](images/FontsAndColors.png) 
 
-## .editorconfig support (VS 2017 and VS 2019 only)
-For VS 2017 and VS 2019, the position of guidelines can be overridden via settings in .editorconfig files.
+## .editorconfig support (VS 2017 and above)
+For VS 2017 and above, the position of guidelines can be overridden via settings in .editorconfig files.
 Set the `guidelines` property to a list of column values. The following example sets guidelines at columns 80 and 120 for C# and VB files and a single guideline at column 80 for all other files.
 
 ```ini

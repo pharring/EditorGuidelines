@@ -152,8 +152,7 @@ namespace EditorGuidelinesTests.Harness
             var textView = docView as IVsTextView;
             if (textView is null)
             {
-                var codeWindow = docView as IVsCodeWindow;
-                if (codeWindow is object)
+                if (docView is IVsCodeWindow codeWindow)
                 {
                     ErrorHandler.ThrowOnFailure(codeWindow.GetPrimaryView(out textView));
                 }

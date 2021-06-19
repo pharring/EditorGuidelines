@@ -28,7 +28,7 @@ namespace EditorGuidelinesTests.Harness
 
         private void SendInput(InputSimulator inputSimulator, KeyboardInput input)
         {
-            switch (input.Value)
+            switch (input._value)
             {
                 case string stringValue:
                     var text = stringValue.Replace("\r\n", "\r").Replace('\n', '\r');
