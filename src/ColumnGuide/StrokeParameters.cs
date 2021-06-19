@@ -4,7 +4,7 @@ using System;
 using System.Windows.Media;
 using static System.FormattableString;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     /// <summary>
     /// Represents the collection of parameters that define the drawing style of a vertical guideline.

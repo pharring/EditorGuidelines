@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ColumnGuide {
+namespace EditorGuidelines {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ColumnGuide {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ColumnGuide.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("EditorGuidelines.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -66,6 +66,24 @@ namespace ColumnGuide {
         internal static string AddGuidelineParameterOutOfRange {
             get {
                 return ResourceManager.GetString("AddGuidelineParameterOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid column..
+        /// </summary>
+        internal static string InvalidColumn {
+            get {
+                return ResourceManager.GetString("InvalidColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing IVsMonitorSelection service..
+        /// </summary>
+        internal static string MissingIVsMonitorSelectionService {
+            get {
+                return ResourceManager.GetString("MissingIVsMonitorSelectionService", resourceCulture);
             }
         }
         

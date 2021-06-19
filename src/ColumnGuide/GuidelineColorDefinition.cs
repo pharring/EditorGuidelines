@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Utilities;
 using System.ComponentModel.Composition;
 using System.Windows.Media;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     [Export(typeof(EditorFormatDefinition)), UserVisible(true), Name(c_name)]
     public class GuidelineColorDefinition : EditorFormatDefinition

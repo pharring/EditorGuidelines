@@ -3,7 +3,7 @@
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     internal static class IWpfTextViewExtensions
     {

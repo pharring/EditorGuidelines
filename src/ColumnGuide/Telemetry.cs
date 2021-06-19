@@ -5,17 +5,15 @@ using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
-using System.ComponentModel.Composition;
 using System.Security.Cryptography;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
-    [Export(typeof(ITelemetry))]
-    internal class Telemetry : ITelemetry
+    internal static class Telemetry
     {
         private const string c_instrumentationKey = "f8324fcc-eb39-4931-bebc-968aab7d3d7d";
 
-        public TelemetryClient Client { get; } = CreateClient();
+        public static TelemetryClient Client { get; } = CreateClient();
 
         /// <summary>
         /// Create a telemetry item for the 'initialize' event with additional properties
@@ -29,10 +27,6 @@ namespace ColumnGuide
             eventTelemetry.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
             eventTelemetry.Context.Component.Version = typeof(Telemetry).Assembly.GetName().Version.ToString();
             return eventTelemetry;
-        }
-
-        private Telemetry()
-        {
         }
 
         private static TelemetryClient CreateClient()

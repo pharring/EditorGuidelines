@@ -4,7 +4,7 @@ using System;
 using static System.Globalization.CultureInfo;
 using static System.FormattableString;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     /// <summary>
     /// Represents the position and style of a single guideline.

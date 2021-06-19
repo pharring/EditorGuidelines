@@ -5,7 +5,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.Windows.Media;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     [Export]
     internal class GuidelineBrush

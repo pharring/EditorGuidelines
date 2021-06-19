@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     /// <summary>
     /// Parser utilities.

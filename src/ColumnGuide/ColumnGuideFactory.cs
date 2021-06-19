@@ -2,18 +2,15 @@
 
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.VisualStudio.CodingConventions;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Windows.Media;
-using System.Windows.Threading;
 using static System.Globalization.CultureInfo;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     #region Adornment Factory
     /// <summary>
@@ -25,12 +22,14 @@ namespace ColumnGuide
     [TextViewRole(PredefinedTextViewRoles.Document)]
     internal sealed class ColumnGuideAdornmentFactory : IWpfTextViewCreationListener, IPartImportsSatisfiedNotification
     {
+        public const string AdornmentLayerName = "ColumnGuide";
+
         /// <summary>
         /// Defines the adornment layer for the adornment. This layer is ordered 
         /// below the text in the Z-order
         /// </summary>
         [Export(typeof(AdornmentLayerDefinition))]
-        [Name("ColumnGuide")]
+        [Name(AdornmentLayerName)]
         [Order(Before = PredefinedAdornmentLayers.Text)]
         [TextViewRole(PredefinedTextViewRoles.Document)]
         public AdornmentLayerDefinition editorAdornmentLayer = null;
@@ -45,14 +44,14 @@ namespace ColumnGuide
             // respond to dynamic changes.
 #pragma warning disable IDE0067 // Dispose objects before losing scope
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            var _ = new ColumnGuide(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventionsManager, Telemetry);
+            var _ = new ColumnGuideAdornment(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventionsManager);
 #pragma warning restore CA2000 // Dispose objects before losing scope
 #pragma warning restore IDE0067 // Dispose objects before losing scope
         }
 
         public void OnImportsSatisfied()
         {
-            TrackSettings(global::ColumnGuide.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
+            TrackSettings(global::EditorGuidelines.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
 
             GuidelineBrush.BrushChanged += (sender, newBrush) =>
             {
@@ -121,9 +120,6 @@ namespace ColumnGuide
 
         [Import]
         private ITextEditorGuidesSettings TextEditorGuidesSettings { get; set; }
-
-        [Import]
-        private ITelemetry Telemetry { get; set; }
 
         [Import]
         private GuidelineBrush GuidelineBrush { get; set; }
