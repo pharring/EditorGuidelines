@@ -8,6 +8,8 @@
     <Description>Editor Guidelines Extension</Description>
 
     <NeutralLanguage>en-US</NeutralLanguage>
+
+    <RootNamespace>EditorGuidelines</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

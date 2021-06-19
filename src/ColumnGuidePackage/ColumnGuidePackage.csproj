@@ -5,7 +5,7 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <RootNamespace>Microsoft.ColumnGuidePackage</RootNamespace>
+    <RootNamespace>EditorGuidelines</RootNamespace>
     <UseCodebase>true</UseCodebase>
     <CreateVsixContainer>False</CreateVsixContainer>
     <CopyVsixManifestToOutput>False</CopyVsixManifestToOutput>
@@ -61,7 +61,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <VSCTCompile Include="ColumnGuidePackage.vsct">
+    <VSCTCompile Include="EditorGuidelinesPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>

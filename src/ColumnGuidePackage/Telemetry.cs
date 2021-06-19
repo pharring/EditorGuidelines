@@ -3,9 +3,9 @@
 using Microsoft.ApplicationInsights;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
-using ColumnGuide;
+using EditorGuidelines;
 
-namespace Microsoft.ColumnGuidePackage
+namespace EditorGuidelines
 {
     internal static class Telemetry
     {

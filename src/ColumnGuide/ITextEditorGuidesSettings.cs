@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     internal interface ITextEditorGuidesSettings
     {

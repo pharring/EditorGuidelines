@@ -8,7 +8,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.Security.Cryptography;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     [Export(typeof(ITelemetry))]
     internal class Telemetry : ITelemetry

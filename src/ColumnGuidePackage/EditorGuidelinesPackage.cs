@@ -11,9 +11,8 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using static System.Globalization.CultureInfo;
-using static Microsoft.ColumnGuidePackage.Guids;
 
-namespace Microsoft.ColumnGuidePackage
+namespace EditorGuidelines
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -30,11 +29,25 @@ namespace Microsoft.ColumnGuidePackage
     [PackageRegistration(UseManagedResourcesOnly = true)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 2)]
-    [Guid(GuidColumnGuidePkgString)]
+    [Guid(PackageGuidString)]
 #pragma warning disable CA1724 // Type name conflicts with namespace name
-    public sealed class ColumnGuidePackage : Package
+    public sealed class EditorGuidelinesPackage : Package
 #pragma warning restore CA1724 // Type name conflicts with namespace name
     {
+        // Must match the guidEditorGuidelinesPackage value in the .vsct
+        public const string PackageGuidString = "a0b80b01-be16-4c42-ab44-7f8d057faa2f";
+
+        // Must match the guidEditorGuidelinesPackageCmdSet value in the .vsct
+        public static readonly Guid CommandSet = new Guid("5aa4cf31-6030-4655-99e7-239b331103f3");
+
+        private static class CommandIds
+        {
+            // Must match the cmdid values in the .vsct
+            public const int AddColumnGuideline = 0x100;
+            public const int RemoveColumnGuideline = 0x101;
+            public const int RemoveAllColumnGuidelines = 0x103;
+        }
+
         private readonly Dispatcher _dispatcher;
 
         /// <summary>
@@ -44,7 +57,7 @@ namespace Microsoft.ColumnGuidePackage
         /// not sited yet inside Visual Studio environment. The place to do all the other 
         /// initialization is the Initialize method.
         /// </summary>
-        public ColumnGuidePackage()
+        public EditorGuidelinesPackage()
         {
             _dispatcher = Dispatcher.CurrentDispatcher;
         }
@@ -62,25 +75,25 @@ namespace Microsoft.ColumnGuidePackage
             _dispatcher.VerifyAccess();
             base.Initialize();
 
-            Telemetry.Client.TrackEvent(nameof(ColumnGuidePackage) + "." + nameof(Initialize), new Dictionary<string, string>() { ["VSVersion"] = GetShellVersion() });
+            Telemetry.Client.TrackEvent(nameof(EditorGuidelinesPackage) + "." + nameof(Initialize), new Dictionary<string, string>() { ["VSVersion"] = GetShellVersion() });
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
 
             if (GetService(typeof(IMenuCommandService)) is OleMenuCommandService mcs)
             {
-                _addGuidelineCommand = new OleMenuCommand(AddColumnGuideExecuted, null, AddColumnGuideBeforeQueryStatus, new CommandID(GuidColumnGuideCmdSet, (int)PkgCmdIDList.cmdidAddColumnGuideline))
+                _addGuidelineCommand = new OleMenuCommand(AddColumnGuideExecuted, null, AddColumnGuideBeforeQueryStatus, new CommandID(CommandSet, CommandIds.AddColumnGuideline))
                 {
                     ParametersDescription = "<column>"
                 };
                 mcs.AddCommand(_addGuidelineCommand);
 
-                _removeGuidelineCommand = new OleMenuCommand(RemoveColumnGuideExecuted, null, RemoveColumnGuideBeforeChangeQueryStatus, new CommandID(GuidColumnGuideCmdSet, (int)PkgCmdIDList.cmdidRemoveColumnGuideline))
+                _removeGuidelineCommand = new OleMenuCommand(RemoveColumnGuideExecuted, null, RemoveColumnGuideBeforeChangeQueryStatus, new CommandID(CommandSet, CommandIds.RemoveColumnGuideline))
                 {
                     ParametersDescription = "<column>"
                 };
                 mcs.AddCommand(_removeGuidelineCommand);
 
-                mcs.AddCommand(new MenuCommand(RemoveAllGuidelinesExecuted, new CommandID(GuidColumnGuideCmdSet, (int)PkgCmdIDList.cmdidRemoveAllColumnGuidelines)));
+                mcs.AddCommand(new MenuCommand(RemoveAllGuidelinesExecuted, new CommandID(CommandSet, CommandIds.RemoveAllColumnGuidelines)));
             }
         }
 

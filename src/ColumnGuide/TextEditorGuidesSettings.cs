@@ -10,9 +10,9 @@ using System.ComponentModel;
 using System.Text;
 
 using static System.Globalization.CultureInfo;
-using static ColumnGuide.Guideline;
+using static EditorGuidelines.Guideline;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     [Export(typeof(ITextEditorGuidesSettings))]
     [Export(typeof(ITextEditorGuidesSettingsChanger))]

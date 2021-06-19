@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using static ColumnGuide.Parser;
+using static EditorGuidelines.Parser;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     /// <summary>
     /// Adornment class that draws vertical guide lines beneath the text
     /// </summary>
-    internal class ColumnGuide : IDisposable
+    internal class ColumnGuideAdornment : IDisposable
     {
         /// <summary>
         /// Limits the number of telemetry events for .editorconfig settings.
@@ -68,7 +68,7 @@ namespace ColumnGuide
         /// <param name="guidelineBrush">The guideline brush.</param>
         /// <param name="codingConventionsManager">The coding conventions manager for handling .editorconfig settings.</param>
         /// <param name="telemetry">Telemetry interface.</param>
-        public ColumnGuide(IWpfTextView view, ITextEditorGuidesSettings settings, GuidelineBrush guidelineBrush, ICodingConventionsManager codingConventionsManager, ITelemetry telemetry)
+        public ColumnGuideAdornment(IWpfTextView view, ITextEditorGuidesSettings settings, GuidelineBrush guidelineBrush, ICodingConventionsManager codingConventionsManager, ITelemetry telemetry)
         {
             _view = view;
             _telemetry = telemetry;

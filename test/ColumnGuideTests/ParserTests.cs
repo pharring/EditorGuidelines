@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
 using Xunit;
-using ColumnGuide;
+using EditorGuidelines;
 using System.Windows.Media;
 using System.Linq;
 

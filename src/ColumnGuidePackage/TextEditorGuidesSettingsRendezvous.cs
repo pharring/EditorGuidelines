@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
-using ColumnGuide;
+using EditorGuidelines;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 
-namespace Microsoft.ColumnGuidePackage
+namespace EditorGuidelines
 {
     internal static class TextEditorGuidesSettingsRendezvous
     {

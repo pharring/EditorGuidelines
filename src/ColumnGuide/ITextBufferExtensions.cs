@@ -3,7 +3,7 @@
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     internal static class ITextBufferExtensions
     {

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     public interface ITextEditorGuidesSettingsChanger
     {

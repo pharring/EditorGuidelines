@@ -2,7 +2,7 @@
 
 using Microsoft.ApplicationInsights;
 
-namespace ColumnGuide
+namespace EditorGuidelines
 {
     public interface ITelemetry
     {
