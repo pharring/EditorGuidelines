@@ -22,6 +22,12 @@ jobs:
       with:
         fetch-depth: 0
 
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
@@ -31,6 +37,10 @@ jobs:
       run: msbuild src /t:Restore,Build /p:Configuration=$env:Configuration /p:DeployExtension=false
       env:
         Configuration: ${{ matrix.configuration }}
+
+    # Run unit tests
+    - name: Run unit tests
+      run: dotnet test --no-build test\ColumnGuideTests\ColumnGuideTests.csproj
 
     # Upload the VSIX package: https://github.com/marketplace/actions/upload-artifact
     - name: Upload build artifacts
