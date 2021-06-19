@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>61d4b2d7-4433-4c71-be24-57a36758ed99</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>EditorGuidelines</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ColumnGuideAdornment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ColumnGuideFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EditorGuidelinesPackage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Guideline.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GuidelineBrush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GuidelineColorDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HostServices.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ITextBufferExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ITextEditorGuidesSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ITextEditorGuidesSettingsChanger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IWpfTextViewExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LineStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)StrokeParameters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Telemetry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TextEditorGuidesSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TextEditorGuidesSettingsRendezvous.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="$(MSBuildThisFileDirectory)Resources\Images_32bit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Resources\Package.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)app.config" />
+    <None Include="$(MSBuildThisFileDirectory)EditorGuidelinesPackage.vsct" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources.resx">
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
