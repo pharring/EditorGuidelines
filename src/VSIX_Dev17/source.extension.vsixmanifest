@@ -10,7 +10,8 @@
     <GettingStartedGuide>https://github.com/pharring/EditorGuidelines#getting-started</GettingStartedGuide>
     <ReleaseNotes>https://github.com/pharring/EditorGuidelines/blob/master/CHANGELOG.md</ReleaseNotes>
     <Icon>EditorGuidelines_128px.png</Icon>
-    <Tags>Editor;Editing;Guidelines;Column</Tags>
+    <Tags>Preview;Editor;Editing;Guidelines;Column</Tags>
+    <Preview>true</Preview>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
