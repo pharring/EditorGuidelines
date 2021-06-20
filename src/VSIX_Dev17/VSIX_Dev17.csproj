@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information. -->
+<Project>
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>EditorGuidelines</RootNamespace>
+    <AssemblyName>EditorGuidelines</AssemblyName>
+    <NeutralLanguage>en-US</NeutralLanguage>
+
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <UseCodebase>true</UseCodebase>
+    <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
+
+    <AssemblyTitle>Editor Guidelines</AssemblyTitle>
+    <Description>Adds commands for the Editor Guidelines extension</Description>
+
+    <!-- Do not deploy the VSIX in Azure DevOps CI builds. -->
+    <DeployExtension Condition="'$(BUILD_BUILDID)' != ''">false</DeployExtension>
+
+    <StartAction>Program</StartAction>
+    <StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix Exp</StartArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Design" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.CodingConventions" Version="1.1.20180503.2" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.0-previews-1-31410-273" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.1619-preview1" />
+  </ItemGroup>
+
+  <Import Project="..\ColumnGuide\ColumnGuide.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <Content Include="..\..\marketplace\images\EditorGuidelines_128px.png">
+      <Link>EditorGuidelines_128px.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Compile Update="..\ColumnGuide\Resources.Designer.cs">
+      <Link>Resources.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>..\ColumnGuide\Resources.resx</DependentUpon>
+    </Compile>
+    <Content Include="..\..\LICENSE">
+      <Link>LICENSE</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <EmbeddedResource Update="..\ColumnGuide\Resources.resx">
+      <Link>Resources.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>..\ColumnGuide\Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <VSCTCompile Include="..\ColumnGuide\EditorGuidelinesPackage.vsct">
+      <Link>EditorGuidelinesPackage.vsct</Link>
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+
+  <Target Name="IncludeNuGetPackageReferences" AfterTargets="GetVsixSourceItems">
+    <ItemGroup>
+      <_ReferenceCopyLocalBinaries Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' != '.pdb'" />
+      <VSIXSourceItem Include="@(_ReferenceCopyLocalBinaries)" Condition="'%(_ReferenceCopyLocalBinaries.NuGetPackageId)' == 'Microsoft.ApplicationInsights'" />
+      <VSIXSourceItem Include="@(_ReferenceCopyLocalBinaries)" Condition="'%(_ReferenceCopyLocalBinaries.NuGetPackageId)' == 'Microsoft.VisualStudio.CodingConventions'" />
+    </ItemGroup>
+  </Target>
+
+</Project>
