@@ -50,22 +50,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Compile Update="..\ColumnGuide\Resources.Designer.cs">
-      <Link>Resources.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>..\ColumnGuide\Resources.resx</DependentUpon>
-    </Compile>
     <Content Include="..\..\LICENSE">
       <Link>LICENSE</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <EmbeddedResource Update="..\ColumnGuide\Resources.resx">
-      <Link>Resources.resx</Link>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>..\ColumnGuide\Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <VSCTCompile Include="..\ColumnGuide\EditorGuidelinesPackage.vsct">
       <Link>EditorGuidelinesPackage.vsct</Link>
       <ResourceName>Menus.ctmenu</ResourceName>
