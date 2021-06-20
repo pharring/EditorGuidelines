@@ -19,6 +19,7 @@
 
     <AssemblyTitle>Editor Guidelines</AssemblyTitle>
     <Description>Adds commands for the Editor Guidelines extension</Description>
+
     <!-- Do not deploy the VSIX in Azure DevOps CI builds. -->
     <DeployExtension Condition="'$(BUILD_BUILDID)' != ''">false</DeployExtension>
 
@@ -30,7 +31,6 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
     <Reference Include="System.Design" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -38,8 +38,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.CodingConventions" Version="1.1.20180503.2" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.0.206" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.10.1055" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.0-previews-1-31410-273" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.1619-preview1" />
   </ItemGroup>
 
   <Import Project="..\ColumnGuide\ColumnGuide.projitems" Label="Shared" />

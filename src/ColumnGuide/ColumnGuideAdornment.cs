@@ -328,7 +328,7 @@ namespace EditorGuidelines
 
                 // TODO: await JoinableTaskFactory.SwitchToMainThreadAsync();
 #pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
-                _view.VisualElement.Dispatcher.BeginInvoke(new Action<IEnumerable<Guideline>>(GuidelinesChanged), guidelines);
+                _ = _view.VisualElement.Dispatcher.BeginInvoke(new Action<IEnumerable<Guideline>>(GuidelinesChanged), guidelines);
 #pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
             }
 
