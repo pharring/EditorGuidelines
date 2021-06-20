@@ -2,6 +2,8 @@ Editor Guidelines adds vertical column guides behind your code. This is useful i
 
 _Note: This extension collects and transmits anonymized usage statistics to the extension author for product improvement purposes._
 
+_Note: If you're using Visual Studio 2022 Preview, you can download a compatible version from here: https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelinesPreview _
+
 ## Getting Started
 Add a new guideline via the context (right-click) menu on the editor surface. You will see a "Guidelines" flyout with three commands:
 
