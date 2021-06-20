@@ -1,0 +1,27 @@
+name: Publish to VS Marketplace
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Publish release to marketplace
+        id: publish
+        uses: mrluje/vs-marketplace-publisher@v2
+        with:
+          # (Required) Personal access token to perform action on the VS Marketplace
+          pat: ${{ secrets.vs_pat }}
+
+          # (Required) Path to the manifest used for the publish
+          manifestPath: marketplace/publishManifest.json
+
+          # (Optional) Fetch the latest release container a vsix package for upload to the VS Marketplace
+          useLatestReleaseAsset: true
