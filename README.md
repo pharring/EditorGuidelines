@@ -7,7 +7,7 @@ A Visual Studio extension that adds vertical column guides to the text editor.
 
 The extension adds vertical column guides behind your code. This is useful if you are trying to tabulate columns of data or if you want to ensure that your lines don't extend beyond a certain length. You specify where the guides go and what color they should be.
 
-[![Build Status](https://dev.azure.com/pharring/EditorGuidelines/_apis/build/status/pharring.EditorGuidelines?branchName=master)](https://dev.azure.com/pharring/EditorGuidelines/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://github.com/pharring/EditorGuidelines/actions/workflows/CI.yml/badge.svg)](https://github.com/pharring/EditorGuidelines/actions/workflows/CI.yml)
 
 ## Getting Started
 [Download](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines) and run the extension (VSIX) for Visual Studio 2012 or later from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines) or, from within Visual Studio, search for "Editor Guidelines" in the "Extensions and Updates" UI.
