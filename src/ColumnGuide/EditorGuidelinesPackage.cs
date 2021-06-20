@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
-using System.Windows.Threading;
+using System.Threading;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -26,13 +26,11 @@ namespace EditorGuidelines
     /// </summary>
     // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is
     // a package.
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", version: 2)]
     [Guid(PackageGuidString)]
-#pragma warning disable CA1724 // Type name conflicts with namespace name
-    public sealed class EditorGuidelinesPackage : Package
-#pragma warning restore CA1724 // Type name conflicts with namespace name
+    public sealed class EditorGuidelinesPackage : AsyncPackage
     {
         // Must match the guidEditorGuidelinesPackage value in the .vsct
         public const string PackageGuidString = "a0b80b01-be16-4c42-ab44-7f8d057faa2f";
@@ -48,8 +46,6 @@ namespace EditorGuidelines
             public const int RemoveAllColumnGuidelines = 0x103;
         }
 
-        private readonly Dispatcher _dispatcher;
-
         /// <summary>
         /// Default constructor of the package.
         /// Inside this method you can place any initialization code that does not require 
@@ -59,7 +55,15 @@ namespace EditorGuidelines
         /// </summary>
         public EditorGuidelinesPackage()
         {
-            _dispatcher = Dispatcher.CurrentDispatcher;
+            _addGuidelineCommand = new OleMenuCommand(AddColumnGuideExecuted, null, AddColumnGuideBeforeQueryStatus, new CommandID(CommandSet, CommandIds.AddColumnGuideline))
+            {
+                ParametersDescription = "<column>"
+            };
+
+            _removeGuidelineCommand = new OleMenuCommand(RemoveColumnGuideExecuted, null, RemoveColumnGuideBeforeChangeQueryStatus, new CommandID(CommandSet, CommandIds.RemoveColumnGuideline))
+            {
+                ParametersDescription = "<column>"
+            };
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -70,63 +74,42 @@ namespace EditorGuidelines
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initilaization code that rely on services provided by VisualStudio.
         /// </summary>
-        protected override void Initialize()
+        protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            _dispatcher.VerifyAccess();
-            base.Initialize();
-
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             Telemetry.Client.TrackEvent(nameof(EditorGuidelinesPackage) + "." + nameof(Initialize), new Dictionary<string, string>() { ["VSVersion"] = GetShellVersion() });
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-
-            if (GetService(typeof(IMenuCommandService)) is OleMenuCommandService mcs)
-            {
-                _addGuidelineCommand = new OleMenuCommand(AddColumnGuideExecuted, null, AddColumnGuideBeforeQueryStatus, new CommandID(CommandSet, CommandIds.AddColumnGuideline))
-                {
-                    ParametersDescription = "<column>"
-                };
-                mcs.AddCommand(_addGuidelineCommand);
-
-                _removeGuidelineCommand = new OleMenuCommand(RemoveColumnGuideExecuted, null, RemoveColumnGuideBeforeChangeQueryStatus, new CommandID(CommandSet, CommandIds.RemoveColumnGuideline))
-                {
-                    ParametersDescription = "<column>"
-                };
-                mcs.AddCommand(_removeGuidelineCommand);
-
-                mcs.AddCommand(new MenuCommand(RemoveAllGuidelinesExecuted, new CommandID(CommandSet, CommandIds.RemoveAllColumnGuidelines)));
-            }
+            OleMenuCommandService mcs = this.GetService<IMenuCommandService, OleMenuCommandService>();
+            mcs.AddCommand(_addGuidelineCommand);
+            mcs.AddCommand(_removeGuidelineCommand);
+            mcs.AddCommand(new MenuCommand(RemoveAllGuidelinesExecuted, new CommandID(CommandSet, CommandIds.RemoveAllColumnGuidelines)));
         }
 
         #endregion
 
         private string GetShellVersion()
         {
-            _dispatcher.VerifyAccess();
-
-            if (GetService(typeof(SVsShell)) is IVsShell shell)
-            {
-                if (ErrorHandler.Succeeded(shell.GetProperty((int)__VSSPROPID5.VSSPROPID_ReleaseVersion, out var obj)) && obj != null)
-                {
-                    return obj.ToString();
-                }
-            }
-
-            return "Unknown";
+            ThreadHelper.ThrowIfNotOnUIThread();
+            IVsShell shell = this.GetService<SVsShell, IVsShell>();
+            return ErrorHandler.Succeeded(shell.GetProperty((int)__VSSPROPID5.VSSPROPID_ReleaseVersion, out var obj)) && obj != null
+                ? obj.ToString()
+                : "Unknown";
         }
 
-        private OleMenuCommand _addGuidelineCommand;
-        private OleMenuCommand _removeGuidelineCommand;
+        private readonly OleMenuCommand _addGuidelineCommand;
+        private readonly OleMenuCommand _removeGuidelineCommand;
 
         private void AddColumnGuideBeforeQueryStatus(object sender, EventArgs e)
         {
-            _dispatcher.VerifyAccess();
+            ThreadHelper.ThrowIfNotOnUIThread();
             var currentColumn = GetCurrentEditorColumn();
             _addGuidelineCommand.Enabled = TextEditorGuidesSettingsRendezvous.Instance.CanAddGuideline(currentColumn);
         }
 
         private void RemoveColumnGuideBeforeChangeQueryStatus(object sender, EventArgs e)
         {
-            _dispatcher.VerifyAccess();
+            ThreadHelper.ThrowIfNotOnUIThread();
             var currentColumn = GetCurrentEditorColumn();
             _removeGuidelineCommand.Enabled = TextEditorGuidesSettingsRendezvous.Instance.CanRemoveGuideline(currentColumn);
         }
@@ -153,18 +136,13 @@ namespace EditorGuidelines
                 return column;
             }
 
-            _dispatcher.VerifyAccess();
+            ThreadHelper.ThrowIfNotOnUIThread();
             return GetCurrentEditorColumn();
         }
 
-        /// <summary>
-        /// This function is the callback used to execute a command when the a menu item is clicked.
-        /// See the Initialize method to see how the menu item is associated to this function using
-        /// the OleMenuCommandService service and the MenuCommand class.
-        /// </summary>
         private void AddColumnGuideExecuted(object sender, EventArgs e)
         {
-            _dispatcher.VerifyAccess();
+            ThreadHelper.ThrowIfNotOnUIThread();
             var column = GetApplicableColumn(e);
             if (column >= 0)
             {
@@ -175,7 +153,7 @@ namespace EditorGuidelines
 
         private void RemoveColumnGuideExecuted(object sender, EventArgs e)
         {
-            _dispatcher.VerifyAccess();
+            ThreadHelper.ThrowIfNotOnUIThread();
             var column = GetApplicableColumn(e);
             if (column >= 0)
             {
@@ -197,7 +175,7 @@ namespace EditorGuidelines
         /// active view in the active document is not a text view.</returns>
         private IVsTextView GetActiveTextView()
         {
-            _dispatcher.VerifyAccess();
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (!(GetService(typeof(IVsMonitorSelection)) is IVsMonitorSelection selection))
             {
                 throw new InvalidOperationException(Resources.MissingIVsMonitorSelectionService);
@@ -208,14 +186,14 @@ namespace EditorGuidelines
             return frameObj is IVsWindowFrame frame ? GetActiveView(frame) : null;
         }
 
-        private IVsTextView GetActiveView(IVsWindowFrame windowFrame)
+        private static IVsTextView GetActiveView(IVsWindowFrame windowFrame)
         {
             if (windowFrame == null)
             {
                 throw new ArgumentNullException(nameof(windowFrame));
             }
 
-            _dispatcher.VerifyAccess();
+            ThreadHelper.ThrowIfNotOnUIThread();
             ErrorHandler.ThrowOnFailure(windowFrame.GetProperty((int)__VSFPROPID.VSFPROPID_DocView, out var pvar));
 
             var textView = pvar as IVsTextView;
@@ -270,7 +248,7 @@ namespace EditorGuidelines
 
         private int GetCurrentEditorColumn()
         {
-            _dispatcher.VerifyAccess();
+            ThreadHelper.ThrowIfNotOnUIThread();
             var view = GetActiveTextView();
             if (view == null)
             {
