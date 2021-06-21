@@ -1,8 +1,8 @@
 Editor Guidelines adds vertical column guides behind your code. This is useful if you are trying to tabulate columns of data or if you want to ensure that your lines don't extend beyond a certain length. You specify where the guides go and what color they should be.
 
-_Note: This extension collects and transmits anonymized usage statistics to the extension author for product improvement purposes._
+Looking for a version that works with **Visual Studio 2022 Preview**? Please [go here](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelinesPreview) to download the preview version.
 
-_Note: If you're using Visual Studio 2022 Preview, you can download a compatible version from here: https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelinesPreview _
+_Note: This extension collects and transmits anonymized usage statistics to the extension author for product improvement purposes._
 
 ## Getting Started
 Add a new guideline via the context (right-click) menu on the editor surface. You will see a "Guidelines" flyout with three commands:
