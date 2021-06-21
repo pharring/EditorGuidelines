@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Company>Paul Harrington</Company>
     <Copyright>Copyright © 2021 Paul Harrington</Copyright>
-    <Version>2.2.6</Version>
+    <Version>2.2.7</Version>
     <LangVersion>7.3</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnlistmentRoot>$(MSBuildThisFileDirectory)</EnlistmentRoot>
