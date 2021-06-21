@@ -80,10 +80,14 @@ namespace EditorGuidelines
             Telemetry.Client.TrackEvent(nameof(EditorGuidelinesPackage) + "." + nameof(Initialize), new Dictionary<string, string>() { ["VSVersion"] = GetShellVersion() });
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-            OleMenuCommandService mcs = this.GetService<IMenuCommandService, OleMenuCommandService>();
-            mcs.AddCommand(_addGuidelineCommand);
-            mcs.AddCommand(_removeGuidelineCommand);
-            mcs.AddCommand(new MenuCommand(RemoveAllGuidelinesExecuted, new CommandID(CommandSet, CommandIds.RemoveAllColumnGuidelines)));
+#pragma warning disable VSTHRD103 // Call async methods when in an async method. We're already on the main thread.
+            if (GetService(typeof(IMenuCommandService)) is OleMenuCommandService mcs)
+#pragma warning restore VSTHRD103 // Call async methods when in an async method
+            {
+                mcs.AddCommand(_addGuidelineCommand);
+                mcs.AddCommand(_removeGuidelineCommand);
+                mcs.AddCommand(new MenuCommand(RemoveAllGuidelinesExecuted, new CommandID(CommandSet, CommandIds.RemoveAllColumnGuidelines)));
+            }
         }
 
         #endregion
@@ -91,10 +95,17 @@ namespace EditorGuidelines
         private string GetShellVersion()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            IVsShell shell = this.GetService<SVsShell, IVsShell>();
-            return ErrorHandler.Succeeded(shell.GetProperty((int)__VSSPROPID5.VSSPROPID_ReleaseVersion, out var obj)) && obj != null
-                ? obj.ToString()
-                : "Unknown";
+            var shell = GetService(typeof(SVsShell)) as IVsShell;
+            if (shell != null)
+            {
+                if (ErrorHandler.Succeeded(shell.GetProperty((int)__VSSPROPID5.VSSPROPID_ReleaseVersion, out var obj)) && obj != null)
+                {
+                    return obj.ToString();
+
+                }
+            }
+
+            return "Unknown";
         }
 
         private readonly OleMenuCommand _addGuidelineCommand;
