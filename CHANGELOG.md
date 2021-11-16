@@ -1,6 +1,10 @@
 # Editor Guidelines
 All notable changes will be documented in this file.
 
+## Version [2.2.8] (Nov 15th 2021)
+### Changed
+- Removed the Preview tag from the VS 2022 version.
+
 ## Version [2.2.7] (June 21st 2021)
 ### Fixed
 - Fixed issue [#82](https://github.com/pharring/EditorGuidelines/issues/82) where version 2.2.6 wouldn't load in VS 2015 and VS 2017.

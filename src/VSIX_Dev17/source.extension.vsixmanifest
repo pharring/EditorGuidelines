@@ -3,15 +3,14 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
     <Identity Id="EditorGuidelines.f7dfa085-35e4-4844-8842-48298d5eaee0" Version="|%CurrentProject%;GetPackageVersion|" Language="en-US" Publisher="Paul Harrington" />
-    <DisplayName>Editor Guidelines (Preview)</DisplayName>
+    <DisplayName>Editor Guidelines</DisplayName>
     <Description xml:space="preserve">Adds vertical column guides to the Visual Studio text editor.</Description>
     <MoreInfo>https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines</MoreInfo>
     <License>LICENSE</License>
     <GettingStartedGuide>https://github.com/pharring/EditorGuidelines#getting-started</GettingStartedGuide>
     <ReleaseNotes>https://github.com/pharring/EditorGuidelines/blob/master/CHANGELOG.md</ReleaseNotes>
     <Icon>EditorGuidelines_128px.png</Icon>
-    <Tags>Preview;Editor;Editing;Guidelines;Column</Tags>
-    <Preview>true</Preview>
+    <Tags>Editor;Editing;Guidelines;Column</Tags>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
