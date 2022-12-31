@@ -3,8 +3,8 @@
 
   <PropertyGroup>
     <Company>Paul Harrington</Company>
-    <Copyright>Copyright © 2021 Paul Harrington</Copyright>
-    <Version>2.2.8</Version>
+    <Copyright>Copyright © 2022 Paul Harrington</Copyright>
+    <Version>2.2.9</Version>
     <LangVersion>7.3</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnlistmentRoot>$(MSBuildThisFileDirectory)</EnlistmentRoot>
