@@ -3,7 +3,6 @@
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Reflection;
-using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -16,6 +15,9 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant(false)]
 
 [assembly: ProvideCodeBase(CodeBase = "Microsoft.ApplicationInsights.dll")]
+#if !Dev17
+// Include CodingConventions prior to VS 2022
 [assembly: ProvideCodeBase(CodeBase = "Microsoft.VisualStudio.CodingConventions.dll")]
+#endif
 
 [assembly: InternalsVisibleTo("ColumnGuideTests")]
