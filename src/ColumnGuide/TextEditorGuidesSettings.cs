@@ -161,6 +161,7 @@ namespace EditorGuidelines
             {
                 i++;
             }
+
             return i;
         }
 
@@ -186,6 +187,7 @@ namespace EditorGuidelines
                 {
                     _guidelinesConfiguration = GetUserSettingsString(c_textEditor, "Guides").Trim();
                 }
+
                 return _guidelinesConfiguration;
             }
 
@@ -227,6 +229,7 @@ namespace EditorGuidelines
                         }
                     }
                 }
+
                 return Colors.DarkRed;
             }
 
@@ -243,6 +246,7 @@ namespace EditorGuidelines
                 {
                     yield break;
                 }
+
                 if (!config.StartsWith("RGB(", StringComparison.Ordinal))
                 {
                     yield break;
