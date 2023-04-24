@@ -67,12 +67,12 @@ namespace EditorGuidelines
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Overriden Package Implementation
+        // Overridden Package Implementation
         #region Package Members
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        /// where you can put all the initilaization code that rely on services provided by VisualStudio.
+        /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
         protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
@@ -95,8 +95,7 @@ namespace EditorGuidelines
         private string GetShellVersion()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            var shell = GetService(typeof(SVsShell)) as IVsShell;
-            if (shell != null)
+            if (GetService(typeof(SVsShell)) is IVsShell shell)
             {
                 if (ErrorHandler.Succeeded(shell.GetProperty((int)__VSSPROPID5.VSSPROPID_ReleaseVersion, out var obj)) && obj != null)
                 {
@@ -215,6 +214,7 @@ namespace EditorGuidelines
                     ErrorHandler.ThrowOnFailure(codeWin.GetLastActiveView(out textView));
                 }
             }
+
             return textView;
         }
 

@@ -31,7 +31,6 @@ namespace EditorGuidelines
 
         private static TelemetryClient CreateClient()
         {
-#pragma warning disable CA2000 // Dispose objects before losing scope. The TelemetryClient will own it.
             var configuration = new TelemetryConfiguration
             {
                 InstrumentationKey = c_instrumentationKey,
@@ -44,7 +43,6 @@ namespace EditorGuidelines
 #endif
                 }
             };
-#pragma warning restore CA2000 // Dispose objects before losing scope
 
             // Keep this context as small as possible since it's sent with every event.
             var client = new TelemetryClient(configuration);

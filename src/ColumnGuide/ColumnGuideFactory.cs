@@ -42,11 +42,7 @@ namespace EditorGuidelines
         {
             // Always create the adornment, even if there are no guidelines, since we
             // respond to dynamic changes.
-#pragma warning disable IDE0067 // Dispose objects before losing scope
-#pragma warning disable CA2000 // Dispose objects before losing scope
             var _ = new ColumnGuideAdornment(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventionsManager);
-#pragma warning restore CA2000 // Dispose objects before losing scope
-#pragma warning restore IDE0067 // Dispose objects before losing scope
         }
 
         public void OnImportsSatisfied()

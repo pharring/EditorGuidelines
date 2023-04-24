@@ -10,9 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Directory.Build.props = ..\Directory.Build.props
 		..\Directory.Build.targets = ..\Directory.Build.targets
 		..\global.json = ..\global.json
-		..\NonShipping.ruleset = ..\NonShipping.ruleset
 		..\NuGet.Config = ..\NuGet.Config
-		..\Shipping.ruleset = ..\Shipping.ruleset
 	EndProjectSection
 	ProjectSection(FolderGlobals) = preProject
 		D_5_4EditorGuidelines_4global_1json__JsonSchema = 
@@ -40,11 +38,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VSIX_Dev17", "VSIX_Dev17\VSIX_Dev17.csproj", "{FEB7F80E-E565-4119-A18E-D2B9F5E95383}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		ColumnGuide\ColumnGuide.projitems*{5ade1b3f-bc61-42f3-a467-f782d4eff07e}*SharedItemsImports = 5
-		ColumnGuide\ColumnGuide.projitems*{61d4b2d7-4433-4c71-be24-57a36758ed99}*SharedItemsImports = 13
-		ColumnGuide\ColumnGuide.projitems*{feb7f80e-e565-4119-a18e-d2b9f5e95383}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -71,5 +64,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64E283A2-5918-46A4-9D2B-83B601BBEBBD}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ColumnGuide\ColumnGuide.projitems*{5ade1b3f-bc61-42f3-a467-f782d4eff07e}*SharedItemsImports = 5
+		ColumnGuide\ColumnGuide.projitems*{61d4b2d7-4433-4c71-be24-57a36758ed99}*SharedItemsImports = 13
+		ColumnGuide\ColumnGuide.projitems*{feb7f80e-e565-4119-a18e-d2b9f5e95383}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
