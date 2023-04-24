@@ -42,10 +42,10 @@
     <!-- Microsoft.VisualStudio.CodingConventions will be loaded from Common7\IDE\PublicAssemblies
          at runtime, so we don't need to include it in the VSIX. -->
     <PackageReference Include="Microsoft.VisualStudio.CodingConventions" Version="1.1.20180503.2" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.0-previews-1-31410-273" ExcludeAssets="runtime">
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.32112.339" ExcludeAssets="runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.4.2119">
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.5.4072">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -75,7 +75,7 @@
 
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
 
-  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(VsSDKInstall)\Microsoft.VsSDK.targets" Condition="'$(VsSDKInstall)' != ''" />
 
   <Target Name="IncludeNuGetPackageReferences" AfterTargets="GetVsixSourceItems">
     <ItemGroup>
