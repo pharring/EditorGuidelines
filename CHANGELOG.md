@@ -1,6 +1,10 @@
 # Editor Guidelines
 All notable changes will be documented in this file.
 
+## Version [2.2.11] (January 26th 2024)
+### Fixed
+- Fixed issue [#122](https://github.com/pharring/EditorGuidelines/issues/122) where Editor Guidelines failed to install on Visual Studio 2022 (17.10 preview) due to a missing CodingConventions package.
+
 ## Version [2.2.10] (April 24th 2023)
 ### Fixed
 - Fixed issue [#116](https://github.com/pharring/EditorGuidelines/issues/116) where Editor Guidelines broke the Visual Studio Spell Checker in Visual Studio 2022 (17.5.4)
@@ -106,6 +110,7 @@ All notable changes will be documented in this file.
 ### Changed
 - Updated description to indicate that VS 2015 is supported.
 
+[2.2.11]: https://github.com/pharring/EditorGuidelines/compare/2.2.9..2.2.11
 [2.2.10]: https://github.com/pharring/EditorGuidelines/compare/2.2.9..2.2.10
 [2.2.9]: https://github.com/pharring/EditorGuidelines/compare/2.2.8..2.2.9
 [2.2.8]: https://github.com/pharring/EditorGuidelines/compare/2.2.7..2.2.8
