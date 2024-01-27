@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
 using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.VisualStudio.CodingConventions;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using System.Collections.Generic;
@@ -42,7 +41,7 @@ namespace EditorGuidelines
         {
             // Always create the adornment, even if there are no guidelines, since we
             // respond to dynamic changes.
-            var _ = new ColumnGuideAdornment(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventionsManager);
+            var _ = new ColumnGuideAdornment(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventions);
         }
 
         public void OnImportsSatisfied()
@@ -120,11 +119,11 @@ namespace EditorGuidelines
         [Import]
         private GuidelineBrush GuidelineBrush { get; set; }
 
-        [Import(AllowDefault = true)]
-        private ICodingConventionsManager CodingConventionsManager { get; set; }
+        [Import]
+        private CodingConventions CodingConventions { get; set; }
 
         [Import]
         private HostServices HostServices { get; set; }
     }
-    #endregion //Adornment Factory
+#endregion //Adornment Factory
 }
