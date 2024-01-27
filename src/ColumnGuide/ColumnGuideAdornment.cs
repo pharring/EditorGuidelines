@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
 using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.VisualStudio.CodingConventions;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.Collections.Generic;
@@ -65,19 +64,18 @@ namespace EditorGuidelines
         /// <param name="view">The <see cref="IWpfTextView"/> upon which the adornment will be drawn</param>
         /// <param name="settings">The guideline settings.</param>
         /// <param name="guidelineBrush">The guideline brush.</param>
-        /// <param name="codingConventionsManager">The coding conventions manager for handling .editorconfig settings.</param>
-        /// <param name="telemetry">Telemetry interface.</param>
-        public ColumnGuideAdornment(IWpfTextView view, ITextEditorGuidesSettings settings, GuidelineBrush guidelineBrush, ICodingConventionsManager codingConventionsManager)
+        /// <param name="codingConventions">The coding conventions manager for handling .editorconfig settings.</param>
+        public ColumnGuideAdornment(IWpfTextView view, ITextEditorGuidesSettings settings, GuidelineBrush guidelineBrush, CodingConventions codingConventions)
         {
             _view = view;
             _guidelineBrush = guidelineBrush;
             _guidelineBrush.BrushChanged += GuidelineBrushChanged;
             _strokeParameters = StrokeParameters.FromBrush(_guidelineBrush.Brush);
 
-            if (codingConventionsManager != null && view.TryGetTextDocument(out var textDocument))
+            if (codingConventions != null)
             {
                 _codingConventionsCancellationTokenSource = new CancellationTokenSource();
-                var fireAndForgetTask = LoadGuidelinesFromEditorConfigAsync(codingConventionsManager, textDocument.FilePath);
+                var fireAndForgetTask = LoadGuidelinesFromEditorConfigAsync(codingConventions, view);
             }
 
             InitializeGuidelines(settings.GuideLinePositionsInChars);
@@ -274,32 +272,34 @@ namespace EditorGuidelines
         /// <summary>
         /// Try to load guideline positions from .editorconfig
         /// </summary>
-        /// <param name="codingConventionsManager">The coding conventions (.editorconfig) manager.</param>
-        /// <param name="filePath">Path to the document being edited.</param>
+        /// <param name="codingConventions">The coding conventions (.editorconfig) manager.</param>
+        /// <param name="view">Editor's WPF view.</param>
         /// <returns>A task which completes when the convention has been loaded and applied.</returns>
-        private async Task LoadGuidelinesFromEditorConfigAsync(ICodingConventionsManager codingConventionsManager, string filePath)
+        private async Task LoadGuidelinesFromEditorConfigAsync(CodingConventions codingConventions, IWpfTextView view)
         {
-            var cancellationToken = _codingConventionsCancellationTokenSource.Token;
-            var codingConventionContext = await codingConventionsManager.GetConventionContextAsync(filePath, cancellationToken).ConfigureAwait(false);
+            CancellationToken cancellationToken = _codingConventionsCancellationTokenSource.Token;
+            CodingConventions.Context context = await codingConventions.CreateContextAsync(view, cancellationToken).ConfigureAwait(false);
+            if (context is null)
+            {
+                return;
+            }
 
-            codingConventionContext.CodingConventionsChangedAsync += OnCodingConventionsChangedAsync;
-            cancellationToken.Register(() => codingConventionContext.CodingConventionsChangedAsync -= OnCodingConventionsChangedAsync);
+            context.ConventionsChanged += UpdateGuidelinesFromCodingConvention;
+            cancellationToken.Register(() => context.ConventionsChanged -= UpdateGuidelinesFromCodingConvention);
 
-            await UpdateGuidelinesFromCodingConventionAsync(codingConventionContext, cancellationToken).ConfigureAwait(false);
+            UpdateGuidelinesFromCodingConvention(context);
         }
 
-        private Task OnCodingConventionsChangedAsync(object sender, CodingConventionsChangedEventArgs arg) => UpdateGuidelinesFromCodingConventionAsync((ICodingConventionContext)sender, _codingConventionsCancellationTokenSource.Token);
-
-        private Task UpdateGuidelinesFromCodingConventionAsync(ICodingConventionContext codingConventionContext, CancellationToken cancellationToken)
+        private void UpdateGuidelinesFromCodingConvention(CodingConventions.Context context)
         {
-            if (cancellationToken.IsCancellationRequested)
+            if (_codingConventionsCancellationTokenSource.Token.IsCancellationRequested)
             {
-                return Task.FromCanceled(cancellationToken);
+                return;
             }
 
             StrokeParameters strokeParameters = null;
 
-            if (codingConventionContext.CurrentConventions.TryGetConventionValue("guidelines_style", out string guidelines_style))
+            if (context.TryGetCurrentSetting("guidelines_style", out string guidelines_style))
             {
                 if (TryParseStrokeParametersFromCodingConvention(guidelines_style, out strokeParameters))
                 {
@@ -310,13 +310,13 @@ namespace EditorGuidelines
 
             ICollection<Guideline> guidelines = null;
 
-            if (codingConventionContext.CurrentConventions.TryGetConventionValue("guidelines", out string guidelinesConventionValue))
+            if (context.TryGetCurrentSetting("guidelines", out string guidelinesConventionValue))
             {
                 guidelines = ParseGuidelinesFromCodingConvention(guidelinesConventionValue, strokeParameters);
             }
 
             // Also support max_line_length: https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#max_line_length
-            if (codingConventionContext.CurrentConventions.TryGetConventionValue("max_line_length", out string max_line_length) && TryParsePosition(max_line_length, out int maxLineLengthValue))
+            if (context.TryGetCurrentSetting("max_line_length", out string max_line_length) && TryParsePosition(max_line_length, out int maxLineLengthValue))
             {
                 (guidelines ?? (guidelines = new List<Guideline>())).Add(new Guideline(maxLineLengthValue, strokeParameters));
             }
@@ -354,8 +354,6 @@ namespace EditorGuidelines
                 Telemetry.Client.TrackEvent(eventTelemetry);
                 s_sentEditorConfigTelemetry = true;
             }
-
-            return Task.CompletedTask;
         }
 
         private bool HaveGuidelinesChanged(IEnumerable<Guideline> newGuidelines)
