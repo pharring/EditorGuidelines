@@ -48,15 +48,11 @@ jobs:
     - name: Upload build artifact (VSIX)
       uses: actions/upload-artifact@v4.3.0
       with:
-        name: VSIX Package ($env:Configuration)
+        name: VSIX Package ${{ matrix.Configuration }}
         path: src/VSIX/bin/**/*.vsix
-      env:
-        Configuration: ${{ matrix.configuration }}
 
     - name: Upload build artifact (Dev 17 VSIX)
       uses: actions/upload-artifact@v4.3.0
       with:
-        name: VSIX Package ($env:Configuration, Dev 17)
+        name: VSIX Package ${{ matrix.Configuration }} Dev 17
         path: src/VSIX_Dev17/bin/**/*.vsix
-      env:
-        Configuration: ${{ matrix.configuration }}
