@@ -12,7 +12,7 @@ namespace EditorGuidelines
     /// Coding conventions support via Microsoft.VisualStudio.CodingConventions assembly.
     /// </summary>
     [Export]
-    internal class CodingConventions
+    internal sealed class CodingConventions
     {
         /// <summary>
         /// Try to import from Microsoft.VisualStudio.CodingConventions.
