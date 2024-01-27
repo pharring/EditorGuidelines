@@ -9,13 +9,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
 
       - name: Publish release to marketplace
         id: publish
-        uses: mrluje/vs-marketplace-publisher@v2
+        uses: mrluje/vs-marketplace-publisher@v2.1.0
         with:
           # (Required) Personal access token to perform action on the VS Marketplace
           pat: ${{ secrets.vs_pat }}
