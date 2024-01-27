@@ -18,7 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "marketplace", "marketplace", "{205F9C77-7D58-42CD-A882-5D73C40E6184}"
 	ProjectSection(SolutionItems) = preProject
+		..\marketplace\overview.Dev17.md = ..\marketplace\overview.Dev17.md
 		..\marketplace\overview.md = ..\marketplace\overview.md
+		..\marketplace\publishManifest.Dev17.json = ..\marketplace\publishManifest.Dev17.json
 		..\marketplace\publishManifest.json = ..\marketplace\publishManifest.json
 	EndProjectSection
 EndProject

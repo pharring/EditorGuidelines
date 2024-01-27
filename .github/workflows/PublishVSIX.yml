@@ -1,5 +1,10 @@
 name: Publish to VS Marketplace
 
+# Triggered by a new GitHub Release being published. It expects to find
+# two .visx assets in the Release:
+#    EditorGuidelines.vsix and
+#    EditorGuidelines.Dev17.vsix
+
 on:
   release:
     types: [published]
@@ -13,15 +18,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Publish release to marketplace
+      - name: Fetch latest release assets
+        uses: dsaltares/fetch-gh-release-asset@1.1.1
+        with:
+          file: *.vsix
+
+      - name: Publish to VS marketplace
         id: publish
         uses: mrluje/vs-marketplace-publisher@v2
         with:
-          # (Required) Personal access token to perform action on the VS Marketplace
           pat: ${{ secrets.vs_pat }}
-
-          # (Required) Path to the manifest used for the publish
           manifestPath: marketplace/publishManifest.json
+          vsixPath: EditorGuidelines.vsix
 
-          # (Optional) Fetch the latest release container a vsix package for upload to the VS Marketplace
-          useLatestReleaseAsset: true
+      - name: Publish Dev17 to marketplace
+        id: publish
+        uses: mrluje/vs-marketplace-publisher@v2
+        with:
+          pat: ${{ secrets.vs_pat }}
+          manifestPath: marketplace/publishManifest.Dev17.json
+          vsixPath: EditorGuidelines.Dev17.vsix
