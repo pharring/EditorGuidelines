@@ -21,7 +21,7 @@ jobs:
       - name: Fetch latest release assets
         uses: dsaltares/fetch-gh-release-asset@1.1.1
         with:
-          file: *.vsix
+          file: EditorGuidelines.vsix
 
       - name: Publish to VS marketplace
         id: publish
@@ -31,8 +31,13 @@ jobs:
           manifestPath: marketplace/publishManifest.json
           vsixPath: EditorGuidelines.vsix
 
+      - name: Fetch latest release assets
+        uses: dsaltares/fetch-gh-release-asset@1.1.1
+        with:
+          file: EditorGuidelines.Dev17.vsix
+
       - name: Publish Dev17 to marketplace
-        id: publish
+        id: publishDev17
         uses: mrluje/vs-marketplace-publisher@v2
         with:
           pat: ${{ secrets.vs_pat }}
