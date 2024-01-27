@@ -52,7 +52,7 @@ jobs:
         path: src/VSIX/bin/**/*.vsix
 
     - name: Upload build artifact (VSIX)
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.3.0
       with:
         name: VSIX Package (Dev 17)
         path: src/VSIX_Dev17/bin/**/*.vsix
