@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.Composition;
+﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
+
+using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.VisualStudio.Text.Editor;
@@ -26,6 +28,12 @@ namespace EditorGuidelines
             private readonly CancellationToken _cancellationToken;
             private IReadOnlyDictionary<string, object> _currentConventions;
 
+            // This is the same as DefaultOptions.RawCodingConventionsSnapshotOptionName from the 17.6
+            // editor SDK. However, by not referencing that constant, we can avoid taking a dependency
+            // on the 17.6 SDK and can continue to load on earlier versions (albeit without
+            // CodingConventions support).
+            private const string c_codingConventionsSnapshotOptionName = "CodingConventionsSnapshot";
+
             public Context(IEditorOptions editorOptions, CancellationToken cancellationToken)
             {
                 _editorOptions = editorOptions;
@@ -37,9 +45,9 @@ namespace EditorGuidelines
 
             private void OnEditorOptionChanged(object sender, EditorOptionChangedEventArgs e)
             {
-                if (e.OptionId == DefaultOptions.RawCodingConventionsSnapshotOptionName)
+                if (e.OptionId == c_codingConventionsSnapshotOptionName)
                 {
-                    _currentConventions = _editorOptions.GetOptionValue(DefaultOptions.RawCodingConventionsSnapshotOptionId);
+                    _currentConventions = _editorOptions.GetOptionValue<IReadOnlyDictionary<string, object>>(c_codingConventionsSnapshotOptionName);
                     ConventionsChanged?.Invoke(this);
                 }
             }
@@ -51,7 +59,7 @@ namespace EditorGuidelines
             public bool TryGetCurrentSetting(string key, out string value)
             {
                 if (_currentConventions is null || !_currentConventions.TryGetValue(key, out object obj) || obj is null)
-                { 
+                {
                     value = null;
                     return false;
                 }
@@ -60,6 +68,5 @@ namespace EditorGuidelines
                 return !string.IsNullOrEmpty(value);
             }
         }
-
     }
 }

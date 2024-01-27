@@ -14,6 +14,9 @@ namespace EditorGuidelines
     [Export]
     internal class CodingConventions
     {
+        /// <summary>
+        /// Try to import from Microsoft.VisualStudio.CodingConventions.
+        /// </summary>
         [Import(AllowDefault = true)]
         private ICodingConventionsManager CodingConventionsManager { get; set; }
 
