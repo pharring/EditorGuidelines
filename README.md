@@ -1,13 +1,19 @@
 # Editor Guidelines
 A Visual Studio extension that adds vertical column guides to the text editor.
 
-[![Visual Studio Marketplace](http://vsmarketplacebadge.apphb.com/version/PaulHarrington.EditorGuidelines.svg)](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines)
-[![Visual Studio Marketplace Rating](http://vsmarketplacebadge.apphb.com/rating-star/PaulHarrington.EditorGuidelines.svg)](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines)
-[![Visual Studio Marketplace Downloads](http://vsmarketplacebadge.apphb.com/downloads-short/PaulHarrington.EditorGuidelines.svg)](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines)
+[![Build Status](https://github.com/pharring/EditorGuidelines/actions/workflows/CI.yml/badge.svg)](https://github.com/pharring/EditorGuidelines/actions/workflows/CI.yml)
 
 The extension adds vertical column guides behind your code. This is useful if you are trying to tabulate columns of data or if you want to ensure that your lines don't extend beyond a certain length. You specify where the guides go and what color they should be.
 
-[![Build Status](https://github.com/pharring/EditorGuidelines/actions/workflows/CI.yml/badge.svg)](https://github.com/pharring/EditorGuidelines/actions/workflows/CI.yml)
+#### Visual Studio 2022
+[![Visual Studio Marketplace](https://vsmarketplacebadges.dev/version-short/PaulHarrington.EditorGuidelinesPreview.svg)](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelinesPreview)
+[![Visual Studio Marketplace Rating](https://vsmarketplacebadges.dev/rating-star/PaulHarrington.EditorGuidelinesPreview.svg)](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelinesPreview)
+[![Visual Studio Marketplace Downloads](https://vsmarketplacebadges.dev/downloads-short/PaulHarrington.EditorGuidelinesPreview.svg)](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelinesPreview)
+
+#### Visual Studio 2015, 2017, 2019
+[![Visual Studio Marketplace](https://vsmarketplacebadges.dev/version-short/PaulHarrington.EditorGuidelines.svg)](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines)
+[![Visual Studio Marketplace Rating](https://vsmarketplacebadges.dev/rating-star/PaulHarrington.EditorGuidelines.svg)](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines)
+[![Visual Studio Marketplace Downloads](https://vsmarketplacebadges.dev/downloads-short/PaulHarrington.EditorGuidelines.svg)](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines)
 
 ## Getting Started
 [Download](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines) and run the extension (VSIX) for Visual Studio 2012 or later from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=PaulHarrington.EditorGuidelines) or, from within Visual Studio, search for "Editor Guidelines" in the "Extensions and Updates" UI.
