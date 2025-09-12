@@ -1,6 +1,13 @@
 # Editor Guidelines
 All notable changes will be documented in this file.
 
+## Version [2.2.12] (September 12th 2025)
+### Added
+- Support for Visual Studio 2026 by extending the version range from [17.0, 18.0) to [17.0, 19.0)
+
+### Fixed
+- Improved error handling for Text Editor settings collection to ensure compatibility with Visual Studio 2026
+
 ## Version [2.2.11] (January 26th 2024)
 ### Fixed
 - Fixed issue [#122](https://github.com/pharring/EditorGuidelines/issues/122) where Editor Guidelines failed to install on Visual Studio 2022 (17.10 preview) due to a missing CodingConventions package.
@@ -110,6 +117,7 @@ All notable changes will be documented in this file.
 ### Changed
 - Updated description to indicate that VS 2015 is supported.
 
+[2.2.12]: https://github.com/pharring/EditorGuidelines/compare/2.2.11..2.2.12
 [2.2.11]: https://github.com/pharring/EditorGuidelines/compare/2.2.9..2.2.11
 [2.2.10]: https://github.com/pharring/EditorGuidelines/compare/2.2.9..2.2.10
 [2.2.9]: https://github.com/pharring/EditorGuidelines/compare/2.2.8..2.2.9
