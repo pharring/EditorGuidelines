@@ -8,9 +8,6 @@ All notable changes will be documented in this file.
 ### Fixed
 - Improved error handling for Text Editor settings collection to ensure compatibility with Visual Studio 2026
 
-### Changed
-- Removed the MyGet feed from NuGet configuration as it is no longer needed
-
 ## Version [2.2.11] (January 26th 2024)
 ### Fixed
 - Fixed issue [#122](https://github.com/pharring/EditorGuidelines/issues/122) where Editor Guidelines failed to install on Visual Studio 2022 (17.10 preview) due to a missing CodingConventions package.
