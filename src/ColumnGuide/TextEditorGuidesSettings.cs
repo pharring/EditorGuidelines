@@ -55,6 +55,13 @@ namespace EditorGuidelines
         private void WriteUserSettingsString(string key, string propertyName, string value)
         {
             var store = ReadWriteUserSettings;
+
+            Marshal.ThrowExceptionForHR(store.CollectionExists(key, out int exists));
+            if (exists == 0)
+            {
+                Marshal.ThrowExceptionForHR(store.CreateCollection(key));
+            }
+
             Marshal.ThrowExceptionForHR(store.SetString(key, propertyName, value));
         }
 
