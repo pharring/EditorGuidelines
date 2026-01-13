@@ -1,0 +1,93 @@
+name: Create Draft Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-draft-release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+      actions: read
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.1.1
+      with:
+        fetch-depth: 0
+    
+    # Read version from Directory.Build.props
+    - name: Read version from Directory.Build.props
+      id: read-version
+      shell: pwsh
+      run: |
+        [xml]$props = Get-Content Directory.Build.props
+        $version = $props.Project.PropertyGroup.Version
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+        echo "Version: $version"
+    
+    # Get the latest successful CI workflow run ID
+    - name: Get latest successful CI workflow run ID
+      id: get-run-id
+      shell: pwsh
+      run: |
+        $runId = gh api repos/${{ github.repository }}/actions/workflows/CI.yml/runs `
+          --jq '.workflow_runs | map(select(.conclusion=="success" and .head_branch=="main")) | .[0].id'
+        echo "run-id=$runId" >> $env:GITHUB_OUTPUT
+        echo "Latest successful run ID: $runId"
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    # Download artifacts from the latest successful CI workflow run
+    - name: Download VSIX Package Release artifact
+      uses: actions/download-artifact@v4
+      with:
+        run-id: ${{ steps.get-run-id.outputs.run-id }}
+        name: VSIX Package Release
+        path: artifacts/vsix-release
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Download VSIX Package Release Dev 17 artifact
+      uses: actions/download-artifact@v4
+      with:
+        run-id: ${{ steps.get-run-id.outputs.run-id }}
+        name: VSIX Package Release Dev 17
+        path: artifacts/vsix-dev17-release
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    
+    # Find and rename the VSIX files
+    - name: Prepare VSIX files
+      shell: pwsh
+      run: |
+        # Find the VSIX file in the Release artifact
+        $vsixFile = Get-ChildItem -Path "artifacts/vsix-release" -Filter "*.vsix" -Recurse | Select-Object -First 1
+        if ($vsixFile) {
+          Copy-Item $vsixFile.FullName -Destination "EditorGuidelines.vsix"
+          echo "Found and copied: $($vsixFile.FullName) -> EditorGuidelines.vsix"
+        } else {
+          echo "Error: VSIX file not found in Release artifact"
+          exit 1
+        }
+        
+        # Find the VSIX file in the Dev17 Release artifact
+        $vsixDev17File = Get-ChildItem -Path "artifacts/vsix-dev17-release" -Filter "*.vsix" -Recurse | Select-Object -First 1
+        if ($vsixDev17File) {
+          Copy-Item $vsixDev17File.FullName -Destination "EditorGuidelines.Dev17.vsix"
+          echo "Found and copied: $($vsixDev17File.FullName) -> EditorGuidelines.Dev17.vsix"
+        } else {
+          echo "Error: VSIX file not found in Dev17 Release artifact"
+          exit 1
+        }
+    
+    # Create a draft GitHub release
+    - name: Create Draft Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.read-version.outputs.version }}
+        name: ${{ steps.read-version.outputs.version }}
+        draft: true
+        files: |
+          EditorGuidelines.vsix
+          EditorGuidelines.Dev17.vsix
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
