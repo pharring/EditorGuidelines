@@ -4,6 +4,8 @@ using Xunit;
 using EditorGuidelines;
 using System.Windows.Media;
 using System.Linq;
+using System.Globalization;
+using System.Threading;
 
 namespace ColumnGuideTests
 {
@@ -78,6 +80,36 @@ namespace ColumnGuideTests
 
             // Partial style definition
             Assert.Contains(new Guideline(132, new StrokeParameters { StrokeThickness = 4, Brush = Brushes.Black }), actual);
+        }
+
+        [Fact]
+        public void ParseDecimalStrokeThickness_CultureInvariant()
+        {
+            // Save current culture
+            var originalCulture = Thread.CurrentThread.CurrentCulture;
+            
+            try
+            {
+                // Test with German culture (uses comma as decimal separator)
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
+                
+                // This should still parse "0.5px" correctly (with dot, not comma)
+                // because we use InvariantCulture for parsing
+                var result = Parser.TryParseStrokeParametersFromCodingConvention("0.5px", out var strokeParameters);
+                
+                Assert.True(result);
+                Assert.Equal(0.5, strokeParameters.StrokeThickness);
+                
+                // Also verify that comma-separated decimals are NOT accepted
+                // (to ensure we're truly using InvariantCulture)
+                result = Parser.TryParseStrokeParametersFromCodingConvention("0,5px", out strokeParameters);
+                Assert.False(result);
+            }
+            finally
+            {
+                // Restore original culture
+                Thread.CurrentThread.CurrentCulture = originalCulture;
+            }
         }
     }
 }
