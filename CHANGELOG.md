@@ -1,6 +1,10 @@
 # Editor Guidelines
 All notable changes will be documented in this file.
 
+## Version [2.2.13] (January 13th 2026)
+### Fixed
+- Fixed issue [#144](https://github.com/pharring/EditorGuidelines/issues/144) where guideline stroke thickness parsing was culture-dependent, causing issues in locales that use comma as decimal separator (e.g., German).
+
 ## Version [2.2.12] (September 12th 2025)
 ### Added
 - Support for Visual Studio 2026 by extending the version range from [17.0, 18.0) to [17.0, 19.0)
@@ -117,6 +121,7 @@ All notable changes will be documented in this file.
 ### Changed
 - Updated description to indicate that VS 2015 is supported.
 
+[2.2.13]: https://github.com/pharring/EditorGuidelines/compare/2.2.12..2.2.13
 [2.2.12]: https://github.com/pharring/EditorGuidelines/compare/2.2.11..2.2.12
 [2.2.11]: https://github.com/pharring/EditorGuidelines/compare/2.2.9..2.2.11
 [2.2.10]: https://github.com/pharring/EditorGuidelines/compare/2.2.9..2.2.10
