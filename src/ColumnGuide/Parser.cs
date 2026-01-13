@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Media;
 
@@ -117,7 +118,7 @@ namespace EditorGuidelines
                 return false;
             }
 
-            if (!double.TryParse(token.Substring(0, token.Length - 2), out var strokeThickness))
+            if (!double.TryParse(token.Substring(0, token.Length - 2), NumberStyles.Float, CultureInfo.InvariantCulture, out var strokeThickness))
             {
                 return false;
             }
