@@ -58,6 +58,19 @@ As the following example shows, you can set the style for each guideline separat
 guidelines = 40 1px dotted black, 80 10px solid 30B0ED4C, 132
 ```
 
+### max_line_length support
+
+The common [max_line_length](https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#max_line_length) .editorconfig property is also supported. `max_line_length` is recognized by a number of editors and formatting tools. The extension will draw a guideline at the single column specified by `max_line_length`.
+
+Examples:
+
+```ini
+[*.{js,ts}]
+max_line_length = 100
+```
+
+If both `max_line_length` and `guidelines` are present, the extension will render all specified guidelines; you can use `guidelines_style` to control the appearance of the guideline produced by `max_line_length`.
+
 To learn more about .editorconfig see https://aka.ms/editorconfigdocs
 
 **Note:** When guidelines are set via .editorconfig they override any other guidelines set via the context menus or command window.
