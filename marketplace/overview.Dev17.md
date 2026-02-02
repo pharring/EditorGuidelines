@@ -19,7 +19,7 @@ You can change the guideline color from the Fonts and Colors page in Tools/Optio
 ![Fonts and Colors](images/FontsAndColors.png)
 
 ## .editorconfig support
-For VS 2017 and above, the position of guidelines can be overridden via settings in .editorconfig files.
+The position of guidelines can be overridden via settings in .editorconfig files.
 Set the `guidelines` property to a list of column values. The following example sets guidelines at columns 80 and 120 for C# and VB files and a single guideline at column 80 for all other files.
 
 ```ini
