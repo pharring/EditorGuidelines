@@ -22,8 +22,7 @@ namespace EditorGuidelines
     internal sealed class ColumnGuideAdornmentFactory : IWpfTextViewCreationListener, IPartImportsSatisfiedNotification
     {
         public const string AdornmentLayerName = "ColumnGuide";
-        private volatile bool _initialSettingsTracked = false;
-        private readonly object _lockObject = new object();
+        private bool _initialSettingsTracked = false;
 
         /// <summary>
         /// Defines the adornment layer for the adornment. This layer is ordered 
@@ -44,14 +43,8 @@ namespace EditorGuidelines
             // Track initial settings once on the first text view creation (which occurs on UI thread)
             if (!_initialSettingsTracked)
             {
-                lock (_lockObject)
-                {
-                    if (!_initialSettingsTracked)
-                    {
-                        TrackSettings(global::EditorGuidelines.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
-                        _initialSettingsTracked = true;
-                    }
-                }
+                TrackSettings(global::EditorGuidelines.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
+                _initialSettingsTracked = true;
             }
 
             // Always create the adornment, even if there are no guidelines, since we
