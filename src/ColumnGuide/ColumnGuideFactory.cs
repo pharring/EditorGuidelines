@@ -46,7 +46,16 @@ namespace EditorGuidelines
 
         public void OnImportsSatisfied()
         {
-            TrackSettings(global::EditorGuidelines.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
+            // Note: This method may be called on a background thread in recent versions of Visual Studio.
+            // We must avoid accessing properties that require UI thread affinity.
+            // See: https://devblogs.microsoft.com/visualstudio/performance-improvements-to-mef-based-editor-productivity-extensions/
+
+            // Defer telemetry tracking to avoid accessing GuidelineBrush.Brush and TextEditorGuidesSettings.GuideLinePositionsInChars
+            // on a background thread, as these may require UI thread access.
+            var telemetry = global::EditorGuidelines.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized");
+            
+            // Track telemetry without accessing properties that might require UI thread
+            Telemetry.Client.TrackEvent(telemetry);
 
             GuidelineBrush.BrushChanged += (sender, newBrush) =>
             {
