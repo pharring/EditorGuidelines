@@ -22,6 +22,7 @@ namespace EditorGuidelines
     internal sealed class ColumnGuideAdornmentFactory : IWpfTextViewCreationListener, IPartImportsSatisfiedNotification
     {
         public const string AdornmentLayerName = "ColumnGuide";
+        private bool _initialSettingsTracked = false;
 
         /// <summary>
         /// Defines the adornment layer for the adornment. This layer is ordered 
@@ -39,6 +40,13 @@ namespace EditorGuidelines
         /// <param name="textView">The <see cref="IWpfTextView"/> upon which the adornment should be placed</param>
         public void TextViewCreated(IWpfTextView textView)
         {
+            // Track initial settings once on the first text view creation (which occurs on UI thread)
+            if (!_initialSettingsTracked)
+            {
+                TrackSettings(global::EditorGuidelines.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
+                _initialSettingsTracked = true;
+            }
+
             // Always create the adornment, even if there are no guidelines, since we
             // respond to dynamic changes.
             var _ = new ColumnGuideAdornment(textView, TextEditorGuidesSettings, GuidelineBrush, CodingConventions);
@@ -46,8 +54,11 @@ namespace EditorGuidelines
 
         public void OnImportsSatisfied()
         {
-            TrackSettings(global::EditorGuidelines.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
+            // Note: This method may be called on a background thread in recent versions of Visual Studio.
+            // We must avoid accessing properties that require UI thread affinity.
+            // See: https://devblogs.microsoft.com/visualstudio/performance-improvements-to-mef-based-editor-productivity-extensions/
 
+            // Subscribe to events. Event subscriptions themselves are thread-safe.
             GuidelineBrush.BrushChanged += (sender, newBrush) =>
             {
                 Telemetry.Client.TrackEvent("GuidelineColorChanged", new Dictionary<string, string> { ["Color"] = newBrush.ToString(InvariantCulture) });
@@ -57,6 +68,10 @@ namespace EditorGuidelines
             {
                 settingsChanged.PropertyChanged += OnSettingsChanged;
             }
+
+            // Note: Initial settings telemetry is deferred to the first TextViewCreated call
+            // to avoid accessing GuidelineBrush.Brush and TextEditorGuidesSettings.GuideLinePositionsInChars
+            // on a background thread.
         }
 
         private void OnSettingsChanged(object sender, PropertyChangedEventArgs e)
