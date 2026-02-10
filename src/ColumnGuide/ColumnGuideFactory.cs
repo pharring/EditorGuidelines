@@ -22,7 +22,7 @@ namespace EditorGuidelines
     internal sealed class ColumnGuideAdornmentFactory : IWpfTextViewCreationListener, IPartImportsSatisfiedNotification
     {
         public const string AdornmentLayerName = "ColumnGuide";
-        private bool _initialSettingsTracked = false;
+        private volatile bool _initialSettingsTracked = false;
         private readonly object _lockObject = new object();
 
         /// <summary>
