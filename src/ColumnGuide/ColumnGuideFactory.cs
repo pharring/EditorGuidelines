@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Paul Harrington.  All Rights Reserved.  Licensed under the MIT License.  See LICENSE in the project root for license information.
 
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using System.Collections.Generic;
@@ -40,10 +41,12 @@ namespace EditorGuidelines
         /// <param name="textView">The <see cref="IWpfTextView"/> upon which the adornment should be placed</param>
         public void TextViewCreated(IWpfTextView textView)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             // Track initial settings once on the first text view creation (which occurs on UI thread)
             if (!_initialSettingsTracked)
             {
-                TrackSettings(global::EditorGuidelines.Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
+                TrackSettings(Telemetry.CreateInitializeTelemetryItem(nameof(ColumnGuideAdornmentFactory) + " initialized"));
                 _initialSettingsTracked = true;
             }
 
@@ -136,9 +139,6 @@ namespace EditorGuidelines
 
         [Import]
         private CodingConventions CodingConventions { get; set; }
-
-        [Import]
-        private HostServices HostServices { get; set; }
     }
 #endregion //Adornment Factory
 }
